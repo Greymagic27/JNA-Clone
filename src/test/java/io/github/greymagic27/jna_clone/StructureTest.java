@@ -1,0 +1,106 @@
+package io.github.greymagic27.jna_clone;
+
+import java.lang.foreign.ValueLayout;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class StructureTest {
+
+    @Test
+    void testWrite() {
+        Point p = new Point();
+        p.x = 10;
+        p.y = 20;
+        p.write();
+        Pointer ptr = p.pointer();
+        assertEquals(10, ptr.segment().get(ValueLayout.JAVA_INT, 0));
+        assertEquals(20, ptr.segment().get(ValueLayout.JAVA_INT, 4));
+    }
+
+    @Test
+    void testRead() {
+        Point p = new Point();
+        Pointer ptr = p.pointer();
+        ptr.segment().set(ValueLayout.JAVA_INT, 0, 500);
+        ptr.segment().set(ValueLayout.JAVA_INT, 4, 1000);
+        p.read();
+        assertEquals(500, p.x);
+        assertEquals(1000, p.y);
+    }
+
+    @Test
+    void testMixedTypes() {
+        @Structure.FieldOrder({"id", "active", "value"})
+        class DataBundle extends Structure {
+            private long id;
+            private boolean active;
+            private double value;
+        }
+        DataBundle db = new DataBundle();
+        db.id = 0xDEADBEEFL;
+        db.active = true;
+        db.value = 3.14159;
+        Pointer ptr = db.pointer();
+        assertEquals(0xDEADBEEFL, ptr.segment().get(ValueLayout.JAVA_LONG, 0));
+        assertEquals(1, ptr.segment().get(ValueLayout.JAVA_INT, 8));
+        assertEquals(3.14159, ptr.segment().get(ValueLayout.JAVA_DOUBLE, 16));
+        db.id = 0;
+        db.read();
+        assertEquals(0xDEADBEEFL, db.id);
+        assertEquals(3.14159, db.value);
+        assertTrue(db.active);
+    }
+
+    @Test
+    void testMissingAnnotation() {
+        @SuppressWarnings("unused")
+        class Invalid extends Structure {
+            private int a;
+        }
+        assertThrows(IllegalStateException.class, Invalid::new, "Throws IllegalStateException if no @FieldOrder annotation is provided");
+    }
+
+    @Test
+    void testMismatchFields() {
+        @SuppressWarnings("unused")
+        @Structure.FieldOrder("x")
+        class Mismatch extends Structure {
+            private int x;
+            private int y;
+        }
+        IllegalStateException e = assertThrows(IllegalStateException.class, Mismatch::new);
+        assertTrue(e.getMessage().contains("Missing from @FieldOrder"));
+    }
+
+    @Test
+    void testGhostFields() {
+        @SuppressWarnings("unused")
+        @Structure.FieldOrder({"x", "ghost"})
+        class GhostField extends Structure {
+            private int x;
+        }
+        RuntimeException e = assertThrows(RuntimeException.class, GhostField::new);
+        assertTrue(e.getMessage().contains("no such field exists"));
+    }
+
+    @Test
+    void testToString() {
+        Point p = new Point();
+        p.x = 42;
+        p.y = 7;
+        String str = p.toString();
+        assertEquals(42, p.pointer().segment().get(ValueLayout.JAVA_INT, 0));
+        assertTrue(str.contains("Point"));
+        assertTrue(str.contains("x=42"));
+        assertTrue(str.contains("y=7"));
+    }
+
+    @Structure.FieldOrder({"x", "y"})
+    private static class Point extends Structure {
+        private int x;
+        private int y;
+    }
+}
