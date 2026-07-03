@@ -2,12 +2,10 @@ package io.github.greymagic27.jna_clone;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
+import java.lang.foreign.ValueLayout;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 
-import static java.lang.foreign.ValueLayout.JAVA_BYTE;
-import static java.lang.foreign.ValueLayout.JAVA_INT;
-import static java.lang.foreign.ValueLayout.JAVA_LONG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -26,12 +24,12 @@ class PointerTest {
     @Test
     void testIntOperations() {
         try (Arena arena = Arena.ofConfined()) {
-            MemorySegment segment = arena.allocate(JAVA_INT);
+            MemorySegment segment = arena.allocate(ValueLayout.JAVA_INT);
             Pointer ptr = new Pointer(segment);
             assertFalse(ptr.isNull());
             ptr.setInt(0, 42);
             assertEquals(42, ptr.getInt(0));
-            MemorySegment multiSegment = arena.allocate(JAVA_INT, 2);
+            MemorySegment multiSegment = arena.allocate(ValueLayout.JAVA_INT, 2);
             Pointer ptr2 = new Pointer(multiSegment);
             ptr2.setInt(4, 99);
             assertEquals(99, ptr2.getInt(4));
@@ -41,7 +39,7 @@ class PointerTest {
     @Test
     void testLongOperations() {
         try (Arena arena = Arena.ofConfined()) {
-            MemorySegment segment = arena.allocate(JAVA_LONG);
+            MemorySegment segment = arena.allocate(ValueLayout.JAVA_LONG);
             Pointer ptr = new Pointer(segment);
             long value = 0xFFFFFFF;
             ptr.setLong(0, value);
@@ -56,7 +54,7 @@ class PointerTest {
             byte[] bytes = (expected + "\0").getBytes(StandardCharsets.UTF_16LE);
             MemorySegment segment = arena.allocate(bytes.length);
             for (int i = 0; i < bytes.length; i++) {
-                segment.set(JAVA_BYTE, i, bytes[i]);
+                segment.set(ValueLayout.JAVA_BYTE, i, bytes[i]);
             }
             Pointer ptr = new Pointer(segment);
             assertEquals(expected, ptr.getWideString(0));
