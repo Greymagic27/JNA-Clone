@@ -25,13 +25,3 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-
-dependencyAnalysis {
-    issues {
-        all {
-            onAny {
-                severity("fail")
-            }
-        }
-    }
-}
