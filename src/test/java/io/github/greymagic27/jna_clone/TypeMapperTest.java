@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class TypeMapperTest {
 
     private static @NotNull Stream<Arguments> provideLayoutMappings() {
-        return Stream.of(Arguments.of(int.class, ValueLayout.JAVA_INT), Arguments.of(long.class, ValueLayout.JAVA_LONG), Arguments.of(short.class, ValueLayout.JAVA_SHORT), Arguments.of(byte.class, ValueLayout.JAVA_BYTE), Arguments.of(boolean.class, ValueLayout.JAVA_BOOLEAN), Arguments.of(double.class, ValueLayout.JAVA_DOUBLE), Arguments.of(float.class, ValueLayout.JAVA_FLOAT), Arguments.of(Integer.class, ValueLayout.JAVA_INT), Arguments.of(String.class, ValueLayout.ADDRESS), Arguments.of(Pointer.class, ValueLayout.ADDRESS), Arguments.of(void.class, null));
+        return Stream.of(Arguments.of(int.class, ValueLayout.JAVA_INT), Arguments.of(long.class, ValueLayout.JAVA_LONG), Arguments.of(short.class, ValueLayout.JAVA_SHORT), Arguments.of(byte.class, ValueLayout.JAVA_BYTE), Arguments.of(boolean.class, ValueLayout.JAVA_INT), Arguments.of(double.class, ValueLayout.JAVA_DOUBLE), Arguments.of(float.class, ValueLayout.JAVA_FLOAT), Arguments.of(Integer.class, ValueLayout.JAVA_INT), Arguments.of(String.class, ValueLayout.ADDRESS), Arguments.of(Pointer.class, ValueLayout.ADDRESS), Arguments.of(void.class, null));
     }
 
     @ParameterizedTest

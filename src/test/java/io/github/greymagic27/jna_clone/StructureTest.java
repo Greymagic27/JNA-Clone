@@ -1,5 +1,6 @@
 package io.github.greymagic27.jna_clone;
 
+import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 import org.junit.jupiter.api.Test;
 
@@ -52,6 +53,53 @@ class StructureTest {
         assertEquals(0xDEADBEEFL, db.id);
         assertEquals(3.14159, db.value);
         assertTrue(db.active);
+    }
+
+    @Test
+    void testBooleanType() {
+        @SuppressWarnings("unused")
+        @Structure.FieldOrder("b")
+        class Boolean extends Structure {
+            private boolean b;
+        }
+        Boolean st = new Boolean();
+        Pointer ptr = st.pointer();
+        st.b = false;
+        st.pointer();
+        assertEquals(0, ptr.segment().get(ValueLayout.JAVA_INT, 0));
+        st.b = true;
+        st.pointer();
+        assertEquals(1, ptr.segment().get(ValueLayout.JAVA_INT, 0));
+        st.b = false;
+        st.read();
+        assertTrue(st.b);
+    }
+
+    @Test
+    void testPointerType() {
+        @SuppressWarnings("unused")
+        @Structure.FieldOrder("addr")
+        class WithPointer extends Structure {
+            private Pointer addr;
+        }
+        WithPointer wp = new WithPointer();
+        wp.addr = new Pointer(MemorySegment.ofAddress(0x9999));
+        wp.pointer();
+        assertEquals(0x9999, wp.pointer().segment().get(ValueLayout.ADDRESS, 0).address());
+    }
+
+    @Test
+    void testStringType() {
+        @SuppressWarnings("unused")
+        @Structure.FieldOrder("str")
+        class WithString extends Structure {
+            private String str;
+        }
+        WithString ws = new WithString();
+        ws.str = "test string";
+        MemorySegment strAddress = ws.pointer().segment().get(ValueLayout.ADDRESS, 0);
+        Pointer strPtr = new Pointer(strAddress.reinterpret(("test string".length() + 1) * 2));
+        assertEquals("test string", strPtr.getWideString(0));
     }
 
     @Test

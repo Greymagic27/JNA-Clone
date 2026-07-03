@@ -39,17 +39,30 @@ public abstract class Structure {
         List<Field> orderedFields = resolveFieldOrder();
         validateFieldCount(orderedFields);
         List<MemoryLayout> members = new ArrayList<>();
+        long currentOffset = 0;
+        long maxAlign = 1;
         for (Field f : orderedFields) {
             f.setAccessible(true);
             MemoryLayout ml = TypeMapper.layoutFor(f.getType());
             if (ml == null) throw new IllegalStateException("Unsupported struct field type: " + f.getType() + " on " + f.getName());
+            long align = ml.byteAlignment();
+            long pad = (align - (currentOffset % align)) % align;
+            if (pad > 0) {
+                members.add(MemoryLayout.paddingLayout(pad));
+                currentOffset += pad;
+            }
             ml = ml.withName(f.getName());
             members.add(ml);
             fields.put(f.getName(), f);
+            currentOffset += ml.byteSize();
+            maxAlign = Math.max(maxAlign, align);
         }
         if (members.isEmpty()) throw new IllegalStateException(getClass().getSimpleName() + " declares no usable fields");
+        long trailingPad = (maxAlign - (currentOffset % maxAlign)) % maxAlign;
+        if (trailingPad > 0) members.add(MemoryLayout.paddingLayout(trailingPad));
         GroupLayout group = MemoryLayout.structLayout(members.toArray(new MemoryLayout[0]));
         for (MemoryLayout ml : members) {
+            if (ml.name().isEmpty()) continue;
             String name = ml.name().orElseThrow();
             handles.put(name, group.varHandle(MemoryLayout.PathElement.groupElement(name)));
         }
@@ -99,6 +112,7 @@ public abstract class Structure {
     }
 
     public Pointer pointer() {
+        write();
         return new Pointer(segment);
     }
 
