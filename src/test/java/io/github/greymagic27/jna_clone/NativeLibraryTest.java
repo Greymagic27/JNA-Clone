@@ -33,8 +33,7 @@ class NativeLibraryTest {
     @Test
     void testSymbolNotFound() throws NoSuchMethodException {
         Method method = MockFunctions.class.getMethod("NonExistentFunction");
-        assertThrows(UnsatisfiedLinkError.class, () -> lib.handleFor(method),
-                "Should throw UnsatisfiedLinkError when function does not exist");
+        assertThrows(UnsatisfiedLinkError.class, () -> lib.handleFor(method), "Should throw UnsatisfiedLinkError when function does not exist");
     }
 
     @Test
