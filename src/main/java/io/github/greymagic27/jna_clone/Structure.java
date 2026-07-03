@@ -89,8 +89,8 @@ public abstract class Structure {
         unexpected.removeAll(declaredNames);
         if (!missing.isEmpty() || !unexpected.isEmpty()) {
             StringBuilder sb = new StringBuilder("@FieldOrder on ").append(getClass().getSimpleName()).append(" doesn't match its declared fields");
-            if (!missing.isEmpty()) sb.append(" Missing from @FieldOrder").append(missing);
-            if (!unexpected.isEmpty()) sb.append(" Not a declared field: ").append(unexpected);
+            if (!missing.isEmpty()) sb.append(System.lineSeparator()).append(System.lineSeparator()).append("Missing from @FieldOrder").append(missing);
+            if (!unexpected.isEmpty()) sb.append(System.lineSeparator()).append("Not a declared field: ").append(unexpected);
             throw new IllegalStateException(sb.toString());
         }
     }
@@ -105,7 +105,7 @@ public abstract class Structure {
             try {
                 resolved.add(getClass().getDeclaredField(name));
             } catch (NoSuchFieldException e) {
-                throw new RuntimeException("@FieldOrder on " + getClass().getSimpleName() + " names \"" + name + "\", but no such field exists", e);
+                throw new RuntimeException("@FieldOrder on " + getClass().getSimpleName() + " names \"" + name + "\", but no such field exists");
             }
         }
         return resolved;
