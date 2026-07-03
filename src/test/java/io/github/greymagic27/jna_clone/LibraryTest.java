@@ -1,0 +1,52 @@
+package io.github.greymagic27.jna_clone;
+
+import java.lang.reflect.Proxy;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class LibraryTest {
+
+    Kernel32 kernel32;
+
+    interface Kernel32 {
+        void SetLastError(int dwErrCode);
+        int GetLastError();
+        Pointer GetModuleHandleW(String lpModuleName);
+    }
+    @BeforeEach
+    void setUp() {
+        kernel32 = Library.load("kernel32", Kernel32.class);
+    }
+
+    @Test
+    void testLoadAndInvoke() {
+        assertNotNull(kernel32, "Proxy should not be null");
+        assertTrue(Proxy.isProxyClass(kernel32.getClass()), "Returned object should be a proxy");
+        int errCode = 999;
+        kernel32.SetLastError(errCode);
+        int result = kernel32.GetLastError();
+        assertEquals(errCode, result, "Native call should correctly set and retrieve the error code");
+    }
+
+    @Test
+    void testObjectMethods() {
+        String toString = kernel32.toString();
+        assertNotNull(toString);
+        assertTrue(toString.contains("NativeLibrary"), "toString should be handled by the NativeLibrary");
+    }
+
+    @Test
+    void testLoadFailsForMissingLibrary() {
+        assertThrows(IllegalArgumentException.class, () -> Library.load("non_existent", Kernel32.class), "Should throw exception if native library cannot be found");
+    }
+
+    @Test
+    void testNullArgumentHandling() {
+        kernel32 = Library.load("kernel32", Kernel32.class);
+        Pointer result = kernel32.GetModuleHandleW(null);
+        assertNotNull(result, "Returned pointer should not be null");
+        assertFalse(result.isNull(), "Process handle should be a valid memory address");
+    }
+}
