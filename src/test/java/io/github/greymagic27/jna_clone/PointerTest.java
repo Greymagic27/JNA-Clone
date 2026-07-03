@@ -34,7 +34,7 @@ class PointerTest {
             MemorySegment multiSegment = arena.allocate(JAVA_INT, 2);
             Pointer ptr2 = new Pointer(multiSegment);
             ptr2.setInt(4, 99);
-            assertEquals(99, ptr.getInt(4));
+            assertEquals(99, ptr2.getInt(4));
         }
     }
 
