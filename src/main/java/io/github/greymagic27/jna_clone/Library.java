@@ -9,19 +9,10 @@ import org.jetbrains.annotations.NotNull;
 public interface Library {
 
     static <T> @NotNull T load(String libraryName, @NotNull Class<T> interfaceType) {
-        final ThreadLocal<Integer> LAST_ERROR = ThreadLocal.withInitial(() -> 0);
         NativeLibrary nativeLibrary = new NativeLibrary(libraryName);
         InvocationHandler handler = ((_, method, args) -> {
-            String name = method.getName();
             if (method.getDeclaringClass() == Object.class) {
                 return method.invoke(nativeLibrary, args);
-            }
-            if (name.equals("SetLastError")) {
-                LAST_ERROR.set((Integer) args[0]);
-                return null;
-            }
-            if (name.equals("GetLastError")) {
-                return LAST_ERROR.get();
             }
             MethodHandle target = nativeLibrary.handleFor(method);
             Class<?>[] paramTypes = method.getParameterTypes();
@@ -35,7 +26,6 @@ public interface Library {
                 return TypeMapper.fromNative(result, method.getReturnType());
             }
         });
-        //noinspection unchecked
-        return (T) Proxy.newProxyInstance(interfaceType.getClassLoader(), new Class<?>[]{interfaceType}, handler);
+        return interfaceType.cast(Proxy.newProxyInstance(interfaceType.getClassLoader(), new Class<?>[]{interfaceType}, handler));
     }
 }

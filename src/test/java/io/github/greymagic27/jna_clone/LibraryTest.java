@@ -11,10 +11,12 @@ class LibraryTest {
     Kernel32 kernel32;
 
     interface Kernel32 {
-        void SetLastError(int dwErrCode);
-        int GetLastError();
+        int GetCurrentProcessId();
+        int GetProcessId(Pointer process);
+        Pointer GetCurrentProcess();
         Pointer GetModuleHandleW(String lpModuleName);
     }
+
     @BeforeEach
     void setUp() {
         kernel32 = Library.load("kernel32", Kernel32.class);
@@ -22,12 +24,15 @@ class LibraryTest {
 
     @Test
     void testLoadAndInvoke() {
+        Kernel32 kernel32 = Library.load("kernel32", Kernel32.class);
         assertNotNull(kernel32, "Proxy should not be null");
         assertTrue(Proxy.isProxyClass(kernel32.getClass()), "Returned object should be a proxy");
-        int errCode = 999;
-        kernel32.SetLastError(errCode);
-        int result = kernel32.GetLastError();
-        assertEquals(errCode, result, "Native call should correctly set and retrieve the error code");
+        int pid = kernel32.GetCurrentProcessId();
+        assertTrue(pid > 0, "Process ID should be valid and non-zero");
+        Pointer processHandle = kernel32.GetCurrentProcess();
+        assertNotNull(processHandle, "Process handle should not be null");
+        int pidFromHandle = kernel32.GetProcessId(processHandle);
+        assertEquals(pid, pidFromHandle, "PID from handle should match GetCurrentProcessId()");
     }
 
     @Test
