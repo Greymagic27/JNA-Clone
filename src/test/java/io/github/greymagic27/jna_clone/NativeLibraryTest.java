@@ -36,6 +36,7 @@ class NativeLibraryTest {
         assertThrows(UnsatisfiedLinkError.class, () -> lib.handleFor(method),
                 "Should throw UnsatisfiedLinkError when function does not exist");
     }
+
     @Test
     void testLibraryNotFound() {
         assertThrows(IllegalArgumentException.class, () -> new NativeLibrary("non_existent"), "Should throw exception when library cannot be loaded");
@@ -52,6 +53,7 @@ class NativeLibraryTest {
 
     interface MockFunctions {
         void SetLastError(int dwErrCode);
+
         void NonExistentFunction();
     }
 }

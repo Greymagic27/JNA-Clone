@@ -4,18 +4,15 @@ import java.lang.reflect.Proxy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LibraryTest {
 
     Kernel32 kernel32;
-
-    interface Kernel32 {
-        int GetCurrentProcessId();
-        int GetProcessId(Pointer process);
-        Pointer GetCurrentProcess();
-        Pointer GetModuleHandleW(String lpModuleName);
-    }
 
     @BeforeEach
     void setUp() {
@@ -52,5 +49,15 @@ class LibraryTest {
         Pointer result = kernel32.GetModuleHandleW(null);
         assertNotNull(result, "Returned pointer should not be null");
         assertFalse(result.isNull(), "Process handle should be a valid memory address");
+    }
+
+    interface Kernel32 {
+        int GetCurrentProcessId();
+
+        int GetProcessId(Pointer process);
+
+        Pointer GetCurrentProcess();
+
+        Pointer GetModuleHandleW(String lpModuleName);
     }
 }
