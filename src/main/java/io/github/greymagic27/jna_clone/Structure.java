@@ -98,7 +98,7 @@ public abstract class Structure {
     private @NotNull List<Field> resolveFieldOrder() {
         FieldOrder order = getClass().getAnnotation(FieldOrder.class);
         if (order == null) {
-            throw new IllegalStateException(getClass().getSimpleName() + " must be annotated with @FieldOrder({...})");
+            throw new IllegalStateException(getClass().getSimpleName() + " must be annotated with @FieldOrder");
         }
         List<Field> resolved = new ArrayList<>();
         for (String name : order.value()) {
