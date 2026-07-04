@@ -1,11 +1,13 @@
 package io.github.greymagic27.jna_clone;
 
 import java.lang.foreign.MemorySegment;
+import org.jetbrains.annotations.Contract;
 
 public class HANDLE {
 
     private final MemorySegment segment;
 
+    @Contract(pure = true)
     public HANDLE(MemorySegment segment) {
         this.segment = segment;
     }
