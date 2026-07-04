@@ -4,8 +4,7 @@ import java.lang.foreign.MemorySegment;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class HANDLE extends Pointer
-{
+public class HANDLE extends Pointer {
     @Contract(pure = true)
     public HANDLE(MemorySegment segment) {
         super(segment);
