@@ -1,5 +1,6 @@
 package io.github.greymagic27.jna_clone;
 
+import io.github.greymagic27.jna_clone.WinDef.BOOL;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
@@ -15,7 +16,7 @@ public final class TypeMapper {
         if (javaType == long.class || javaType == Long.class) return ValueLayout.JAVA_LONG;
         if (javaType == short.class || javaType == Short.class) return ValueLayout.JAVA_SHORT;
         if (javaType == byte.class || javaType == Byte.class) return ValueLayout.JAVA_BYTE;
-        if (javaType == boolean.class || javaType == Boolean.class) return ValueLayout.JAVA_INT;
+        if (javaType == boolean.class || javaType == Boolean.class || javaType == BOOL.class) return ValueLayout.JAVA_INT;
         if (javaType == double.class || javaType == Double.class) return ValueLayout.JAVA_DOUBLE;
         if (javaType == float.class || javaType == Float.class) return ValueLayout.JAVA_FLOAT;
         if (javaType == void.class || javaType == Void.class) return null;
@@ -46,6 +47,9 @@ public final class TypeMapper {
         if (javaType == Boolean.class || javaType == boolean.class) {
             return ((Boolean) value) ? 1 : 0;
         }
+        if (javaType == BOOL.class) {
+            return ((BOOL) value).intValue();
+        }
         return value;
     }
 
@@ -67,6 +71,9 @@ public final class TypeMapper {
         }
         if (returnType == Boolean.class || returnType == boolean.class) {
             return ((Integer) raw) != 0;
+        }
+        if (returnType == BOOL.class) {
+            return new BOOL((Integer) raw);
         }
         return raw;
     }

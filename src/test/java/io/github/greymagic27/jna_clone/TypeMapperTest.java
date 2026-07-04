@@ -1,14 +1,17 @@
 package io.github.greymagic27.jna_clone;
 
+import io.github.greymagic27.jna_clone.WinDef.BOOL;
 import io.github.greymagic27.jna_clone.WinDef.HDC;
 import io.github.greymagic27.jna_clone.WinDef.HWND;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 import java.util.List;
+import java.util.Objects;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -31,7 +34,7 @@ class TypeMapperTest {
         for (Class<?> type : List.of(byte.class, Byte.class)) {
             assertEquals(ValueLayout.JAVA_BYTE, TypeMapper.layoutMappings(type));
         }
-        for (Class<?> type : List.of(boolean.class, Boolean.class)) {
+        for (Class<?> type : List.of(boolean.class, Boolean.class, BOOL.class)) {
             assertEquals(ValueLayout.JAVA_INT, TypeMapper.layoutMappings(type));
         }
         for (Class<?> type : List.of(double.class, Double.class)) {
@@ -157,6 +160,28 @@ class TypeMapperTest {
     }
 
     @Test
+    void testToNative_BOOL() {
+        try (Arena arena = Arena.ofConfined()) {
+            assertEquals(1, TypeMapper.toNative(new BOOL(1), BOOL.class, arena));
+            assertEquals(0, TypeMapper.toNative(new BOOL(0), BOOL.class, arena));
+        }
+    }
+
+    @Test
+    void testToNative_BOOLAnyNonZeroIsTrue() {
+        try (Arena arena = Arena.ofConfined()) {
+            assertEquals(99, TypeMapper.toNative(new BOOL(99), BOOL.class, arena));
+        }
+    }
+
+    @Test
+    void testToNativeBOOLNull() {
+        try (Arena arena = Arena.ofConfined()) {
+            assertEquals(0, TypeMapper.toNative(null, BOOL.class, arena));
+        }
+    }
+
+    @Test
     void testFromNative_Pointer() {
         MemorySegment segment = MemorySegment.NULL;
         Object result = TypeMapper.fromNative(segment, Pointer.class);
@@ -217,6 +242,21 @@ class TypeMapperTest {
         }
         RuntimeException e = assertThrows(RuntimeException.class, () -> TypeMapper.fromNative(MemorySegment.NULL, Bad.class));
         assertTrue(e.getMessage().contains("MemorySegment"));
+    }
+
+    @Test
+    void testFromNative_BOOL() {
+        Object result = TypeMapper.fromNative(1, BOOL.class);
+        Object result2 = TypeMapper.fromNative(0, BOOL.class);
+        assertInstanceOf(BOOL.class, result);
+        assertTrue(((BOOL) result).booleanValue());
+        assertFalse(((BOOL) Objects.requireNonNull(result2)).booleanValue());
+    }
+
+    @Test
+    void testFromNative_BOOLAnyNonZeroIsTrue() {
+        Object result = TypeMapper.fromNative(-1, BOOL.class);
+        assertTrue(((BOOL) Objects.requireNonNull(result)).booleanValue());
     }
 
     @SuppressWarnings("DataFlowIssue")
