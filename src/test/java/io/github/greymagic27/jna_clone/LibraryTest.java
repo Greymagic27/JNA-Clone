@@ -1,7 +1,6 @@
 package io.github.greymagic27.jna_clone;
 
 import java.lang.reflect.Proxy;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -54,7 +53,7 @@ class LibraryTest {
     @Test
     void testUnsupportedMethodType() {
         interface Invalid extends Library {
-            void ChoosePixelFormat(List<String> list);
+            void ChoosePixelFormat(String[] list);
         }
         Invalid lib = Library.load("gdi32", Invalid.class);
         assertThrows(IllegalArgumentException.class, () -> lib.ChoosePixelFormat(null));
