@@ -4,7 +4,6 @@ import java.lang.foreign.MemorySegment;
 
 public class Handle {
 
-    public static final Handle NULL = new Handle(MemorySegment.NULL);
     private final MemorySegment segment;
 
     public Handle(MemorySegment segment) {
@@ -13,10 +12,6 @@ public class Handle {
 
     public MemorySegment segment() {
         return segment;
-    }
-
-    public boolean isNull() {
-        return segment.address() == 0;
     }
 
     @Override

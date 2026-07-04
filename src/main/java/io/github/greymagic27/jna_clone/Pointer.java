@@ -8,8 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 public record Pointer(MemorySegment segment) {
 
-    public static final Pointer NULL = new Pointer(MemorySegment.NULL);
-
     @Contract(pure = true)
     public Pointer {
     }

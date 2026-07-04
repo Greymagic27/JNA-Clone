@@ -14,14 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class PointerTest {
 
     @Test
-    void testNullPointer() {
-        Pointer ptr = Pointer.NULL;
-        assertTrue(ptr.isNull(), "Pointer.NULL should be null");
-        assertEquals(0, ptr.segment().address());
-        assertEquals("Pointer@0x0", ptr.toString());
-    }
-
-    @Test
     void testIntOperations() {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment segment = arena.allocate(ValueLayout.JAVA_INT);

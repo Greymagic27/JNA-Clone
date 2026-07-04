@@ -5,8 +5,6 @@ import java.lang.foreign.MemorySegment;
 
 public class HDC extends Handle {
 
-    public static final HDC NULL = new HDC(MemorySegment.NULL);
-
     public HDC(MemorySegment segment) {
         super(segment);
     }
