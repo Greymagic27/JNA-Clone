@@ -3,6 +3,7 @@ package io.github.greymagic27.jna_clone;
 import io.github.greymagic27.jna_clone.WinDef.BOOL;
 import io.github.greymagic27.jna_clone.WinDef.HDC;
 import io.github.greymagic27.jna_clone.WinDef.HWND;
+import io.github.greymagic27.jna_clone.WinDef.LONG;
 import io.github.greymagic27.jna_clone.WinDef.LPARAM;
 import io.github.greymagic27.jna_clone.WinDef.LRESULT;
 import java.lang.foreign.Arena;
@@ -211,6 +212,22 @@ class TypeMapperTest {
     void testToNative_LPARAMNull() {
         try (Arena arena = Arena.ofConfined()) {
             assertEquals(0, TypeMapper.toNative(null, LPARAM.class, arena));
+        }
+    }
+
+    @Test
+    void testToNative_LONG() {
+        try (Arena arena = Arena.ofConfined()) {
+            LONG value = new LONG(9999L);
+            Object result = TypeMapper.toNative(value, LONG.class, arena);
+            assertEquals(9999L, result);
+        }
+    }
+
+    @Test
+    void testToNative_LONGnull() {
+        try (Arena arena = Arena.ofConfined()) {
+            assertEquals(0, TypeMapper.toNative(null, LONG.class, arena));
         }
     }
 

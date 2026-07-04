@@ -1,6 +1,7 @@
 package io.github.greymagic27.jna_clone;
 
 import io.github.greymagic27.jna_clone.WinDef.BOOL;
+import io.github.greymagic27.jna_clone.WinDef.LONG;
 import io.github.greymagic27.jna_clone.WinDef.LPARAM;
 import io.github.greymagic27.jna_clone.WinDef.LRESULT;
 import java.lang.foreign.Arena;
@@ -16,7 +17,7 @@ public final class TypeMapper {
     static @Nullable MemoryLayout layoutMappings(Class<?> javaType) {
         if (javaType == int.class || javaType == Integer.class) return ValueLayout.JAVA_INT;
         if (javaType == boolean.class || javaType == Boolean.class || javaType == BOOL.class) return ValueLayout.JAVA_INT;
-        if (javaType == long.class || javaType == Long.class || javaType == LRESULT.class || javaType == LPARAM.class) return ValueLayout.JAVA_LONG;
+        if (javaType == long.class || javaType == Long.class || javaType == LRESULT.class || javaType == LPARAM.class || javaType == LONG.class) return ValueLayout.JAVA_LONG;
         if (javaType == short.class || javaType == Short.class) return ValueLayout.JAVA_SHORT;
         if (javaType == byte.class || javaType == Byte.class) return ValueLayout.JAVA_BYTE;
         if (javaType == double.class || javaType == Double.class) return ValueLayout.JAVA_DOUBLE;
@@ -56,6 +57,9 @@ public final class TypeMapper {
         if (javaType == LPARAM.class) {
             return ((LPARAM) value).longValue();
         }
+        if (javaType == LONG.class) {
+            return ((LONG) value).longValue();
+        }
         return value;
     }
 
@@ -82,10 +86,13 @@ public final class TypeMapper {
             return new BOOL((Integer) raw);
         }
         if (returnType == LRESULT.class) {
-            return new LRESULT(((Number)raw).longValue());
+            return new LRESULT(((Number) raw).longValue());
         }
         if (returnType == LPARAM.class) {
-            return new LPARAM(((Number)raw).longValue());
+            return new LPARAM(((Number) raw).longValue());
+        }
+        if (returnType == LONG.class) {
+            return new LONG(((Number) raw).longValue());
         }
         return raw;
     }
