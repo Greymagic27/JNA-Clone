@@ -4,6 +4,7 @@ import io.github.greymagic27.jna_clone.WinDef.BOOL;
 import io.github.greymagic27.jna_clone.WinDef.BYTE;
 import io.github.greymagic27.jna_clone.WinDef.HDC;
 import io.github.greymagic27.jna_clone.WinDef.HINSTANCE;
+import io.github.greymagic27.jna_clone.WinDef.HMENU;
 import io.github.greymagic27.jna_clone.WinDef.HMODULE;
 import io.github.greymagic27.jna_clone.WinDef.HWND;
 import io.github.greymagic27.jna_clone.WinDef.LONG;
@@ -143,11 +144,21 @@ class TypeMapperTest {
     }
 
     @Test
+    void testToNative_HMENU() {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment segment = arena.allocate(8);
+            HMENU hmenu = new HMENU(segment);
+            assertEquals(segment, TypeMapper.toNative(hmenu, HMENU.class, arena));
+        }
+    }
+
+    @Test
     void testToNative_HandleNull() {
         try (Arena arena = Arena.ofConfined()) {
             assertEquals(MemorySegment.NULL, TypeMapper.toNative(null, HANDLE.class, arena));
             assertEquals(MemorySegment.NULL, TypeMapper.toNative(null, HWND.class, arena));
             assertEquals(MemorySegment.NULL, TypeMapper.toNative(null, HDC.class, arena));
+            assertEquals(MemorySegment.NULL, TypeMapper.toNative(null, HMENU.class, arena));
         }
     }
 
@@ -338,6 +349,14 @@ class TypeMapperTest {
         Object result = TypeMapper.fromNative(segment, HDC.class);
         assertInstanceOf(HDC.class, result);
         assertEquals(0x9999L, ((HDC) result).segment.address());
+    }
+
+    @Test
+    void testFromNative_HMENU() {
+        MemorySegment segment = MemorySegment.ofAddress(0x9999);
+        Object result = TypeMapper.fromNative(segment, HMENU.class);
+        assertInstanceOf(HMENU.class, result);
+        assertEquals(0x9999L, ((HMENU) result).segment.address());
     }
 
     @Test
