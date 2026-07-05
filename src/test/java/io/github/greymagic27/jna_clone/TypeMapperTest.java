@@ -2,6 +2,7 @@ package io.github.greymagic27.jna_clone;
 
 import io.github.greymagic27.jna_clone.WinDef.BOOL;
 import io.github.greymagic27.jna_clone.WinDef.BYTE;
+import io.github.greymagic27.jna_clone.WinDef.HBRUSH;
 import io.github.greymagic27.jna_clone.WinDef.HCURSOR;
 import io.github.greymagic27.jna_clone.WinDef.HDC;
 import io.github.greymagic27.jna_clone.WinDef.HICON;
@@ -346,6 +347,21 @@ class TypeMapperTest {
         }
     }
 
+    @Test
+    void testToNative_HBrush() {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment segment = arena.allocate(8);
+            HBRUSH hbrush = new HBRUSH(segment);
+            assertEquals(segment, TypeMapper.toNative(hbrush, HBRUSH.class, arena));
+        }
+    }
+
+    @Test
+    void testToNative_HBrushNull() {
+        try (Arena arena = Arena.ofConfined()) {
+            assertEquals(MemorySegment.NULL, TypeMapper.toNative(null, HBRUSH.class, arena));
+        }
+    }
 
     @Test
     void testToNative_Callback() {
@@ -508,6 +524,14 @@ class TypeMapperTest {
         Object result = TypeMapper.fromNative(segment, HICON.class);
         assertInstanceOf(HICON.class, result);
         assertEquals(0x5678L, ((HICON) result).segment.address());
+    }
+
+    @Test
+    void testFromNative_HBrush() {
+        MemorySegment segment = MemorySegment.ofAddress(0x5678);
+        Object result = TypeMapper.fromNative(segment, HBRUSH.class);
+        assertInstanceOf(HBRUSH.class, result);
+        assertEquals(0x5678L, ((HBRUSH) result).segment.address());
     }
 
     @Test
