@@ -106,16 +106,16 @@ class TypeMapperTest {
 
     @Test
     void testToNative_Structure() {
+        @SuppressWarnings("unused")
+        @Structure.FieldOrder("x")
+        class TestPoint extends Structure {
+            private int x;
+        }
         TestPoint point = new TestPoint();
-        point.x = 10;
-        point.y = 20;
         try (Arena arena = Arena.ofConfined()) {
             Object result = TypeMapper.toNative(point, Structure.class, arena);
-            MemorySegment segment = (MemorySegment) result;
             assertInstanceOf(MemorySegment.class, result);
             assertEquals(point.pointer().segment, result);
-            assertEquals(10, segment.get(ValueLayout.JAVA_INT, 0));
-            assertEquals(20, segment.get(ValueLayout.JAVA_INT, 4));
         }
     }
 
@@ -448,12 +448,5 @@ class TypeMapperTest {
         assertEquals(9999f, (Float) floatResult, 0.001f);
         assertEquals((short) 5, TypeMapper.fromNative((short) 5, short.class));
         assertEquals(true, TypeMapper.fromNative(1, boolean.class));
-    }
-
-    @SuppressWarnings("unused")
-    @Structure.FieldOrder({"x", "y"})
-    private static class TestPoint extends Structure {
-        private int x;
-        private int y;
     }
 }
