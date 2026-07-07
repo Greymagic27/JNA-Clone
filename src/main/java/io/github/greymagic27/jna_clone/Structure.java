@@ -123,11 +123,7 @@ public abstract class Structure {
     }
 
     public int size() {
-        long size = layout.byteSize();
-        if (size > Integer.MAX_VALUE) {
-            throw new IllegalStateException("Struct too large: " + size);
-        }
-        return (int) size;
+        return Math.toIntExact(layout.byteSize());
     }
 
     public void write() {
