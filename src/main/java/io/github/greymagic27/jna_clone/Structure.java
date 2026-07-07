@@ -99,9 +99,7 @@ public abstract class Structure {
 
     private @NotNull List<Field> resolveFieldOrder() {
         FieldOrder order = getClass().getAnnotation(FieldOrder.class);
-        if (order == null) {
-            throw new IllegalStateException(getClass().getSimpleName() + " must be annotated with @FieldOrder");
-        }
+        if (order == null) throw new IllegalStateException(getClass().getSimpleName() + " must be annotated with @FieldOrder");
         List<Field> resolved = new ArrayList<>();
         List<String> missing = new ArrayList<>();
         for (String name : order.value()) {
@@ -111,9 +109,7 @@ public abstract class Structure {
                 missing.add(name);
             }
         }
-        if (!missing.isEmpty()) {
-            throw new RuntimeException("@FieldOrder on " + getClass().getSimpleName() + " names " + missing + ", but no such field(s) exist");
-        }
+        if (!missing.isEmpty()) throw new RuntimeException("@FieldOrder on " + getClass().getSimpleName() + " names " + missing + ", but no such field(s) exist");
         return resolved;
     }
 
