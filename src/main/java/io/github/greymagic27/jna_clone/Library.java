@@ -13,9 +13,7 @@ public interface Library {
     static <T extends Library> @NotNull T load(String libraryName, @NotNull Class<T> interfaceType) {
         NativeLibrary nativeLibrary = new NativeLibrary(libraryName);
         InvocationHandler handler = (_, method, args) -> {
-            if (method.getDeclaringClass() == Object.class) {
-                return method.invoke(nativeLibrary, args);
-            }
+            if (method.getDeclaringClass() == Object.class) return method.invoke(nativeLibrary, args);
             MethodHandle target = nativeLibrary.handleFor(method);
             Class<?>[] paramTypes = method.getParameterTypes();
             try (Arena callArena = Arena.ofConfined()) {
