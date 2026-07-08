@@ -35,16 +35,16 @@ class TypeMapperTest {
 
     @Test
     void testLayoutMappings() {
-        for (Class<?> type : List.of(int.class, Integer.class)) {
+        for (Class<?> type : List.of(int.class, Integer.class, WPARAM.class)) {
             assertEquals(ValueLayout.JAVA_INT, TypeMapper.layoutMappings(type));
         }
-        for (Class<?> type : List.of(long.class, Long.class, LRESULT.class)) {
+        for (Class<?> type : List.of(long.class, Long.class, LONG.class, LRESULT.class, LPARAM.class)) {
             assertEquals(ValueLayout.JAVA_LONG, TypeMapper.layoutMappings(type));
         }
-        for (Class<?> type : List.of(short.class, Short.class, WORD.class)) {
+        for (Class<?> type : List.of(short.class, Short.class, WORD.class, ATOM.class)) {
             assertEquals(ValueLayout.JAVA_SHORT, TypeMapper.layoutMappings(type));
         }
-        for (Class<?> type : List.of(byte.class, Byte.class)) {
+        for (Class<?> type : List.of(byte.class, Byte.class, BYTE.class)) {
             assertEquals(ValueLayout.JAVA_BYTE, TypeMapper.layoutMappings(type));
         }
         for (Class<?> type : List.of(boolean.class, Boolean.class, BOOL.class)) {
@@ -59,13 +59,10 @@ class TypeMapperTest {
         for (Class<?> type : List.of(void.class, Void.class)) {
             assertNull(TypeMapper.layoutMappings(type));
         }
-        for (Class<?> type : List.of(String.class)) {
+        for (Class<?> type : List.of(String.class, Pointer.class, Structure.class, HANDLE.class)) {
             assertEquals(ValueLayout.ADDRESS, TypeMapper.layoutMappings(type));
         }
-        for (Class<?> type : List.of(Pointer.class, Structure.class, HANDLE.class)) {
-            assertEquals(ValueLayout.ADDRESS, TypeMapper.layoutMappings(type));
-        }
-        for (Class<?> type : List.of(HWND.class, HDC.class)) {
+        for (Class<?> type : List.of(HWND.class, HDC.class, HBRUSH.class, HICON.class, HCURSOR.class, HINSTANCE.class, HMENU.class)) {
             assertEquals(ValueLayout.ADDRESS, TypeMapper.layoutMappings(type));
         }
     }
