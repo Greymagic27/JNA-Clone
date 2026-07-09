@@ -24,6 +24,8 @@ public interface User32 extends Library {
 
     BOOL UpdateWindow(HWND hWnd);
 
+    BOOL DestroyWindow(HWND hWnd);
+
     BOOL TranslateMessage(WinUser.MSG msg);
 
     BOOL DispatchMessageW(WinUser.MSG msg);

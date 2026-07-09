@@ -7,15 +7,22 @@ import io.github.greymagic27.jna_clone.platform.Kernel32;
 import io.github.greymagic27.jna_clone.platform.User32;
 import io.github.greymagic27.jna_clone.platform.WinUser;
 
-public class Window {
-
-    private static final String className = "WindowClass";
+public class BlankWindow {
 
     static void main() {
+        createBlankWindow();
+    }
+
+    private static void createBlankWindow() {
+        final String className = "WindowClass";
         HINSTANCE hInstance = Kernel32.INSTANCE.GetModuleHandleW(null);
         WinUser.WndProc wndProc = (hWnd, uMsg, wParam, lParam) -> {
             if (uMsg == WinUser.WM_DESTROY) {
                 User32.INSTANCE.PostQuitMessage(0);
+                return new LRESULT(0);
+            }
+            if (uMsg == WinUser.WM_CLOSE) {
+                User32.INSTANCE.DestroyWindow(hWnd);
                 return new LRESULT(0);
             }
             return User32.INSTANCE.DefWindowProcW(hWnd, uMsg, wParam, lParam);

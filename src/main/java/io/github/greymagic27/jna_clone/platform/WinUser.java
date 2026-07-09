@@ -29,6 +29,7 @@ public interface WinUser {
     int WS_SYSMENU = 0x00080000;
 
     int WM_DESTROY = 0x0002;
+    int WM_CLOSE = 0x0010;
 
     int CS_HREDRAW = 0x0002;
     int CS_VREDRAW = 0x0001;

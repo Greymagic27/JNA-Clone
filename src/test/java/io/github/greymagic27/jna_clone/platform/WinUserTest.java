@@ -13,6 +13,7 @@ import static io.github.greymagic27.jna_clone.platform.WinUser.CS_VREDRAW;
 import static io.github.greymagic27.jna_clone.platform.WinUser.CW_USEDEFAULT;
 import static io.github.greymagic27.jna_clone.platform.WinUser.IDC_ARROW;
 import static io.github.greymagic27.jna_clone.platform.WinUser.SW_SHOW;
+import static io.github.greymagic27.jna_clone.platform.WinUser.WM_CLOSE;
 import static io.github.greymagic27.jna_clone.platform.WinUser.WM_DESTROY;
 import static io.github.greymagic27.jna_clone.platform.WinUser.WS_BORDER;
 import static io.github.greymagic27.jna_clone.platform.WinUser.WS_CAPTION;
@@ -52,6 +53,7 @@ class WinUserTest {
     @Test
     void testWmValues() {
         assertEquals(0x0002, WM_DESTROY);
+        assertEquals(0x0010, WM_CLOSE);
     }
 
     @Test
