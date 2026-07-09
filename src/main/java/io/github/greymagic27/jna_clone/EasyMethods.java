@@ -10,13 +10,12 @@ import io.github.greymagic27.jna_clone.platform.WinUser;
 public class EasyMethods {
 
     static void main() {
-        Window.createBlankWindow();
+        Window.createBlankWindow("Test Window", 800, 600);
     }
 
     public static class Window {
 
-        public static void createBlankWindow() {
-            final String className = "WindowClass";
+        public static void createBlankWindow(String title, int width, int height) {
             HINSTANCE hInstance = Kernel32.INSTANCE.GetModuleHandleW(null);
             WinUser.WndProc wndProc = (hWnd, uMsg, wParam, lParam) -> {
                 if (uMsg == WinUser.WM_DESTROY) {
@@ -34,10 +33,10 @@ public class EasyMethods {
             wc.style = WinUser.CS_HREDRAW | WinUser.CS_VREDRAW;
             wc.lpfnWndProc = wndProc;
             wc.hInstance = hInstance;
-            wc.lpszClassName = className;
+            wc.lpszClassName = "WindowClass";
             wc.hCursor = User32.INSTANCE.LoadCursorW(null, WinUser.IDC_ARROW);
             User32.INSTANCE.RegisterClassExW(wc);
-            HWND hwnd = User32.INSTANCE.CreateWindowExW(0, className, "Test Window", WinUser.WS_OVERLAPPEDWINDOW, WinUser.CW_USEDEFAULT, WinUser.CW_USEDEFAULT, 800, 600, null, null, hInstance, null);
+            HWND hwnd = User32.INSTANCE.CreateWindowExW(0, "WindowClass", title, WinUser.WS_OVERLAPPEDWINDOW, WinUser.CW_USEDEFAULT, WinUser.CW_USEDEFAULT, width, height, null, null, hInstance, null);
             User32.INSTANCE.ShowWindow(hwnd, WinUser.SW_SHOW);
             User32.INSTANCE.UpdateWindow(hwnd);
             WinUser.MSG msg = new WinUser.MSG();
