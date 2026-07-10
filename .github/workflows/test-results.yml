@@ -5,10 +5,14 @@ on:
     workflows: ["Build"]
     types:
       - completed
-
+    
 jobs:
   tests:
     runs-on: windows-latest
+    permissions:
+      actions: read
+      contents: read
+
 
     steps:
       - name: Download test results
@@ -16,6 +20,8 @@ jobs:
         with:
           name: junit-results
           path: .
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
 
       - uses: dorny/test-reporter@v3.0.0
         if: always()
