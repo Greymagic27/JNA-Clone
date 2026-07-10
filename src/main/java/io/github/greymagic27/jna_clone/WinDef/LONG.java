@@ -4,7 +4,11 @@ import org.jspecify.annotations.NonNull;
 
 public class LONG {
 
-    private int value = 0;
+    private int value;
+
+    public LONG() {
+
+    }
 
     public LONG(int value) {
         this.value = value;
