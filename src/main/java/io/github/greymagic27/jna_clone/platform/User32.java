@@ -36,7 +36,7 @@ public interface User32 extends Library {
     HANDLE LoadImageW(HINSTANCE hInst, Pointer name, int type, int cx, int cy, int fuLoad);
 
     /**
-     * @deprecated This function has been superseded by {@link #LoadImageW(HINSTANCE, Pointer, int, int, int, int)}).
+     * @deprecated This function has been superseded by {@link #LoadImageW(HINSTANCE, Pointer, int, int, int, int)}
      */
     @Deprecated
     HCURSOR LoadCursorW(HINSTANCE hInstance, Pointer lpCursorName);
