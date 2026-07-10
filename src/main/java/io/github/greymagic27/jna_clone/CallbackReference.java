@@ -20,7 +20,7 @@ import org.jspecify.annotations.Nullable;
 
 public final class CallbackReference {
 
-    private static final Map<Callback, MemorySegment> LIVE = new IdentityHashMap<>();
+    private static final IdentityHashMap<Callback, MemorySegment> LIVE = new IdentityHashMap<>();
     private static final Map<Class<?>, FunctionDescriptor> DESCRIPTORS = new ConcurrentHashMap<>();
     private static final MethodHandle DISPATCH;
 
