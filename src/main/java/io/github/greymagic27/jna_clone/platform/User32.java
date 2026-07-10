@@ -16,9 +16,7 @@ import io.github.greymagic27.jna_clone.WinDef.WPARAM;
 public interface User32 extends Library {
     User32 INSTANCE = Library.load(User32.class);
 
-    void PostQuitMessage(int nExitCode);
-
-    LRESULT DefWindowProcW(HWND hWnd, int Msg, WPARAM wParam, LPARAM lParam);
+    ATOM RegisterClassExW(WinUser.WNDCLASSEXW pointer);
 
     BOOL ShowWindow(HWND hWnd, int nCmdShow);
 
@@ -32,14 +30,16 @@ public interface User32 extends Library {
 
     BOOL GetMessageW(WinUser.MSG lpMsg, HWND hWnd, int wMsgFilterMin, int wMsgFilterMax);
 
+    LRESULT DefWindowProcW(HWND hWnd, int Msg, WPARAM wParam, LPARAM lParam);
+
     /**
-     @deprecated This function has been superseded by the LoadImage function (with LR_DEFAULTSIZE and LR_SHARED flags set).
-     <a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew">...</a>
+     * @deprecated This function has been superseded by the LoadImage function (with LR_DEFAULTSIZE and LR_SHARED flags set).
+     * <a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew">...</a>
      */
     @Deprecated
     HCURSOR LoadCursorW(HINSTANCE hInstance, Pointer lpCursorName);
 
-    ATOM RegisterClassExW(WinUser.WNDCLASSEXW pointer);
-
     HWND CreateWindowExW(int dwExStyle, String lpClassName, String lpWindowName, int dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam);
+
+    void PostQuitMessage(int nExitCode);
 }
