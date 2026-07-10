@@ -1,3 +1,9 @@
+[![.github/workflows/gradle.yml](https://github.com/Greymagic27/JNA-Clone/actions/workflows/gradle.yml/badge.svg)](https://github.com/Greymagic27/JNA-Clone/actions/workflows/gradle.yml)
+
+A WIP implementation of my own JNA like bindings, sticking to the C++ structure as much as possible.
+
+## Helpful info for me
+
 Long: 64 Bit
 
 Int: 32 Bit
