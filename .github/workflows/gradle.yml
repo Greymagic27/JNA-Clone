@@ -27,7 +27,7 @@ jobs:
 
       - name: Build with Gradle
         run: gradle build
-        
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v5.0.0
