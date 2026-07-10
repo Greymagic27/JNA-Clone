@@ -6,10 +6,6 @@ public class LONG {
 
     private int value = 0;
 
-    public LONG() {
-
-    }
-
     public LONG(int value) {
         this.value = value;
     }
