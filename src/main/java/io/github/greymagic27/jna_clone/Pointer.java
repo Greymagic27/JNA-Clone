@@ -29,6 +29,10 @@ public class Pointer {
         return segment.get(ValueLayout.JAVA_LONG, offset);
     }
 
+    public MemorySegment getPointer() {
+        return segment;
+    }
+
     public void setInt(long offset, int value) {
         segment.set(ValueLayout.JAVA_INT, offset, value);
     }

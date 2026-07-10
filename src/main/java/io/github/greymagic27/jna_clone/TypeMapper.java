@@ -88,12 +88,12 @@ public final class TypeMapper {
         if (returnType == void.class || returnType == Void.class) {
             return null;
         }
-        if (HANDLE.class.isAssignableFrom(returnType)) {
+        if (Pointer.class.isAssignableFrom(returnType)) {
             try {
                 MemorySegment segment = (MemorySegment) raw;
                 return returnType.getConstructor(MemorySegment.class).newInstance(segment);
             } catch (ReflectiveOperationException e) {
-                throw new RuntimeException("HANDLE subclass " + returnType + " needs a (MemorySegment) constructor", e);
+                throw new RuntimeException(returnType + " needs a (MemorySegment) constructor", e);
             }
         }
         if (WORD.class.isAssignableFrom(returnType)) {
