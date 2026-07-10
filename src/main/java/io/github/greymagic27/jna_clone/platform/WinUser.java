@@ -30,6 +30,8 @@ public interface WinUser {
 
     int WM_DESTROY = 0x0002;
     int WM_CLOSE = 0x0010;
+    int WM_KEYDOWN = 0x0100;
+    int WM_PAINT = 0x000F;
 
     int CS_HREDRAW = 0x0002;
     int CS_VREDRAW = 0x0001;
@@ -37,6 +39,12 @@ public interface WinUser {
     int CW_USEDEFAULT = 0x80000000;
 
     int SW_SHOW = 5;
+    int SW_HIDE = 0;
+
+    int LR_DEFAULTSIZE = 0x00000040;
+    int LR_SHARED = 0x00008000;
+
+    int IMAGE_CURSOR = 2;
 
     Pointer IDC_ARROW = Pointer.MAKEINTRESOURCEW(32512);
 

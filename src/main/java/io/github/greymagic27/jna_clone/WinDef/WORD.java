@@ -6,7 +6,6 @@ public class WORD {
 
     private final short value;
 
-
     public WORD(short value) {
         this.value = value;
     }

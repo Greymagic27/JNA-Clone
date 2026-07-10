@@ -25,12 +25,12 @@ public class Pointer {
         return segment.get(ValueLayout.JAVA_INT, offset);
     }
 
-    public void setInt(long offset, int value) {
-        segment.set(ValueLayout.JAVA_INT, offset, value);
-    }
-
     public long getLong(long offset) {
         return segment.get(ValueLayout.JAVA_LONG, offset);
+    }
+
+    public void setInt(long offset, int value) {
+        segment.set(ValueLayout.JAVA_INT, offset, value);
     }
 
     public void setLong(long offset, long value) {

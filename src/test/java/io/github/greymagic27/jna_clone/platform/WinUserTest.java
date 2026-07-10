@@ -12,9 +12,15 @@ import static io.github.greymagic27.jna_clone.platform.WinUser.CS_HREDRAW;
 import static io.github.greymagic27.jna_clone.platform.WinUser.CS_VREDRAW;
 import static io.github.greymagic27.jna_clone.platform.WinUser.CW_USEDEFAULT;
 import static io.github.greymagic27.jna_clone.platform.WinUser.IDC_ARROW;
+import static io.github.greymagic27.jna_clone.platform.WinUser.IMAGE_CURSOR;
+import static io.github.greymagic27.jna_clone.platform.WinUser.LR_DEFAULTSIZE;
+import static io.github.greymagic27.jna_clone.platform.WinUser.LR_SHARED;
+import static io.github.greymagic27.jna_clone.platform.WinUser.SW_HIDE;
 import static io.github.greymagic27.jna_clone.platform.WinUser.SW_SHOW;
 import static io.github.greymagic27.jna_clone.platform.WinUser.WM_CLOSE;
 import static io.github.greymagic27.jna_clone.platform.WinUser.WM_DESTROY;
+import static io.github.greymagic27.jna_clone.platform.WinUser.WM_KEYDOWN;
+import static io.github.greymagic27.jna_clone.platform.WinUser.WM_PAINT;
 import static io.github.greymagic27.jna_clone.platform.WinUser.WS_BORDER;
 import static io.github.greymagic27.jna_clone.platform.WinUser.WS_CAPTION;
 import static io.github.greymagic27.jna_clone.platform.WinUser.WS_CHILD;
@@ -54,6 +60,8 @@ class WinUserTest {
     void testWmValues() {
         assertEquals(0x0002, WM_DESTROY);
         assertEquals(0x0010, WM_CLOSE);
+        assertEquals(0x0100, WM_KEYDOWN);
+        assertEquals(0x000F, WM_PAINT);
     }
 
     @Test
@@ -70,11 +78,23 @@ class WinUserTest {
     @Test
     void testSwValues() {
         assertEquals(5, SW_SHOW);
+        assertEquals(0, SW_HIDE);
     }
 
     @Test
     void testIdcValues() {
         assertEquals(IDC_ARROW, Pointer.MAKEINTRESOURCEW(32512));
+    }
+
+    @Test
+    void testLrValues() {
+        assertEquals(0x00000040, LR_DEFAULTSIZE);
+        assertEquals(0x00008000, LR_SHARED);
+    }
+
+    @Test
+    void testMiscValues() {
+        assertEquals(2, IMAGE_CURSOR);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package io.github.greymagic27.jna_clone;
 
+import io.github.greymagic27.jna_clone.WinDef.HCURSOR;
 import io.github.greymagic27.jna_clone.WinDef.HINSTANCE;
 import io.github.greymagic27.jna_clone.WinDef.HWND;
 import io.github.greymagic27.jna_clone.WinDef.LRESULT;
@@ -32,7 +33,7 @@ public class EasyMethods {
         wc.lpfnWndProc = wndProc;
         wc.hInstance = hInstance;
         wc.lpszClassName = "WindowClass";
-        wc.hCursor = User32.INSTANCE.LoadCursorW(null, WinUser.IDC_ARROW);
+        wc.hCursor = (HCURSOR) User32.INSTANCE.LoadImageW(null, WinUser.IDC_ARROW, WinUser.IMAGE_CURSOR, 0, 0, WinUser.LR_DEFAULTSIZE | WinUser.LR_SHARED);
         User32.INSTANCE.RegisterClassExW(wc);
         HWND hwnd = User32.INSTANCE.CreateWindowExW(0, "WindowClass", title, WinUser.WS_OVERLAPPEDWINDOW, WinUser.CW_USEDEFAULT, WinUser.CW_USEDEFAULT, width, height, null, null, hInstance, null);
         User32.INSTANCE.ShowWindow(hwnd, WinUser.SW_SHOW);

@@ -12,6 +12,7 @@ import io.github.greymagic27.jna_clone.WinDef.LPARAM;
 import io.github.greymagic27.jna_clone.WinDef.LPVOID;
 import io.github.greymagic27.jna_clone.WinDef.LRESULT;
 import io.github.greymagic27.jna_clone.WinDef.WPARAM;
+import io.github.greymagic27.jna_clone.WinNT.HANDLE;
 
 public interface User32 extends Library {
     User32 INSTANCE = Library.load(User32.class);
@@ -31,6 +32,8 @@ public interface User32 extends Library {
     BOOL GetMessageW(WinUser.MSG lpMsg, HWND hWnd, int wMsgFilterMin, int wMsgFilterMax);
 
     LRESULT DefWindowProcW(HWND hWnd, int Msg, WPARAM wParam, LPARAM lParam);
+
+    HANDLE LoadImageW(HINSTANCE hInst, Pointer name, int type, int cx, int cy, int fuLoad);
 
     /**
      * @deprecated This function has been superseded by the LoadImage function (with LR_DEFAULTSIZE and LR_SHARED flags set).
