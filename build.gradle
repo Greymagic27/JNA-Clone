@@ -44,3 +44,12 @@ tasks.withType(JavaExec).configureEach {
 tasks.withType(Javadoc).configureEach {
     (options as StandardJavadocDocletOptions).addStringOption('Xdoclint:all,-missing', '-quiet')
 }
+tasks.named("build") {
+    dependsOn("publishToMavenLocal")
+}
+tasks.named("check") {
+    dependsOn("publishToMavenLocal")
+}
+tasks.named("test") {
+    dependsOn("publishToMavenLocal")
+}

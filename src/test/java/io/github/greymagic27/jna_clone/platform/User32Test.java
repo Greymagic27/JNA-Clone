@@ -51,7 +51,7 @@ class User32Test {
         WinUser.WNDCLASSEXW wndClass = new WinUser.WNDCLASSEXW();
         wndClass.cbSize = wndClass.size();
         wndClass.style = CS_HREDRAW | CS_VREDRAW;
-        wndClass.lpfnWndProc = (user32::DefWindowProcW);
+        wndClass.lpfnWndProc = user32::DefWindowProcW;
         wndClass.hInstance = new HINSTANCE(MemorySegment.NULL);
         wndClass.lpszClassName = "Test";
         ATOM atom = user32.RegisterClassExW(wndClass);
