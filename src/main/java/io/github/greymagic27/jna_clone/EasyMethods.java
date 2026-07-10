@@ -8,11 +8,8 @@ import io.github.greymagic27.jna_clone.platform.Kernel32;
 import io.github.greymagic27.jna_clone.platform.User32;
 import io.github.greymagic27.jna_clone.platform.WinUser;
 
+@SuppressWarnings("unused")
 public class EasyMethods {
-
-    static void main() {
-        createWindow("Test Window", 800, 600);
-    }
 
     public static void createWindow(String title, int width, int height) {
         HINSTANCE hInstance = Kernel32.INSTANCE.GetModuleHandleW(null);
