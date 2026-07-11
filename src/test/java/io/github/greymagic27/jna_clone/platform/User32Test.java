@@ -148,8 +148,8 @@ class User32Test {
         AtomicBoolean quit = new AtomicBoolean(false);
         Thread t = new Thread(() -> {
             user32.PostQuitMessage(0);
-            BOOL result = user32.GetMessageW(msg, null, 0, 0);
-            if (!result.booleanValue()) quit.set(true);
+            int result = user32.GetMessageW(msg, null, 0, 0);
+            if (result == 0) quit.set(true);
             latch.countDown();
         });
         t.start();

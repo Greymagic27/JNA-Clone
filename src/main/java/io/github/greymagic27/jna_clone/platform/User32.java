@@ -30,7 +30,7 @@ public interface User32 extends Library {
 
     BOOL DispatchMessageW(WinUser.MSG msg);
 
-    BOOL GetMessageW(WinUser.MSG lpMsg, HWND hWnd, int wMsgFilterMin, int wMsgFilterMax);
+    int GetMessageW(WinUser.MSG lpMsg, HWND hWnd, int wMsgFilterMin, int wMsgFilterMax);
 
     BOOL GetWindowRect(HWND hWnd, WinDef.RECT lpRect);
 
