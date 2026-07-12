@@ -101,6 +101,20 @@ public final class TypeMapper {
                 throw new RuntimeException("WORD subclass " + returnType + " needs a (short) constructor", e);
             }
         }
+        if (Structure.class.isAssignableFrom(returnType)) {
+            try {
+                Structure structure = (Structure) returnType.getConstructor().newInstance();
+                structure.useMemory((MemorySegment) raw);
+                return structure;
+            } catch (ReflectiveOperationException e) {
+                throw new RuntimeException(returnType + "needs a (MemorySegment) constructor", e);
+            }
+        }
+        if (returnType == String.class) {
+            if (raw == null || raw.equals(MemorySegment.NULL)) return null;
+            MemorySegment segment = (MemorySegment) raw;
+            return segment.getString(0, StandardCharsets.UTF_16LE);
+        }
         if (returnType == Boolean.class || returnType == boolean.class) {
             return ((Integer) raw) != 0;
         }

@@ -18,9 +18,11 @@ import io.github.greymagic27.jna_clone.WinDef.LRESULT;
 import io.github.greymagic27.jna_clone.WinDef.WORD;
 import io.github.greymagic27.jna_clone.WinDef.WPARAM;
 import io.github.greymagic27.jna_clone.WinNT.HANDLE;
+import io.github.greymagic27.jna_clone.platform.WinDef;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -493,9 +495,11 @@ class TypeMapperTest {
     }
 
     @Test
-    void testFromNative_Identity() {
-        String test = "test";
-        assertEquals(test, TypeMapper.fromNative(test, String.class));
+    void testFromNative_String() {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment nativeString = arena.allocateFrom("test", StandardCharsets.UTF_16LE);
+            assertEquals("test", TypeMapper.fromNative(nativeString, String.class));
+        }
     }
 
     @Test
@@ -665,6 +669,27 @@ class TypeMapperTest {
         assertEquals(9999f, (Float) floatResult, 0.001f);
         assertEquals((short) 5, TypeMapper.fromNative((short) 5, short.class));
         assertEquals(true, TypeMapper.fromNative(1, boolean.class));
+    }
+
+    @Test
+    void testNativeStructureConversion() {
+        WinDef.POINT p = new WinDef.POINT();
+        p.x = new LONG(42);
+        p.write();
+        WinDef.POINT result = (WinDef.POINT) TypeMapper.fromNative(p.pointer().segment, WinDef.POINT.class);
+        assertNotNull(result);
+        result.read();
+        assertEquals(new LONG(42), result.x);
+    }
+
+    @Test
+    void testHandleWithMissingConstructor() {
+        class InvalidHandle extends HANDLE {
+            private InvalidHandle() {
+                super(MemorySegment.NULL);
+            }
+        }
+        assertThrows(RuntimeException.class, () -> TypeMapper.fromNative(MemorySegment.NULL, InvalidHandle.class));
     }
 
     static class CustomPointer extends Pointer {

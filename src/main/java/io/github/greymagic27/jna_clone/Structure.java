@@ -22,7 +22,7 @@ import org.jspecify.annotations.Nullable;
 public abstract class Structure {
 
     private final Arena arena;
-    private final MemorySegment segment;
+    private MemorySegment segment;
     private final MemoryLayout layout;
     private final Map<String, VarHandle> handles = new LinkedHashMap<>();
     private final Map<String, Field> fields = new LinkedHashMap<>();
@@ -193,6 +193,10 @@ public abstract class Structure {
             first = false;
         }
         return sb.append("}").toString();
+    }
+
+    public void useMemory(MemorySegment segment) {
+        this.segment = segment;
     }
 
     @Retention(RetentionPolicy.RUNTIME)
