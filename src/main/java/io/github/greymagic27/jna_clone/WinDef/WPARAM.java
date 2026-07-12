@@ -1,22 +1,21 @@
 package io.github.greymagic27.jna_clone.WinDef;
 
-import org.gradle.internal.impldep.com.sun.jna.platform.win32.WinDef;
 import org.jspecify.annotations.NonNull;
 
 public class WPARAM {
 
-    private final int value;
+    private final long value;
 
-    public WPARAM(int value) {
+    public WPARAM(long value) {
         this.value = value;
     }
 
-    public int intValue() {
+    public long longValue() {
         return value;
     }
 
     @Override
     public @NonNull String toString() {
-        return String.valueOf(intValue());
+        return String.valueOf(longValue());
     }
 }

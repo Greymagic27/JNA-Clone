@@ -27,6 +27,13 @@ public interface Library {
                     nativeArgs[i] = TypeMapper.toNative(arg, paramTypes[i], callArena);
                 }
                 Object result = target.invokeWithArguments(nativeArgs);
+                if (args != null) {
+                    for (Object arg : args) {
+                        if (arg instanceof Structure structArg) {
+                            structArg.read();
+                        }
+                    }
+                }
                 return TypeMapper.fromNative(result, method.getReturnType());
             }
         };

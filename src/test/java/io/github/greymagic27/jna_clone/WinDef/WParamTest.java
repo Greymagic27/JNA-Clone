@@ -9,18 +9,18 @@ class WParamTest {
 
     @Test
     void testConstructorStoresValue() {
-        assertEquals(42, new WPARAM(42).intValue());
-        assertEquals(0, new WPARAM(0).intValue());
-        assertEquals(-123, new WPARAM(-123).intValue());
+        assertEquals(42L, new WPARAM(42L).longValue());
+        assertEquals(0L, new WPARAM(0L).longValue());
+        assertEquals(-123L, new WPARAM(-123L).longValue());
     }
 
     @Test
     void testLongValue() {
-        assertEquals(7L, new WPARAM(7).intValue());
+        assertEquals(7L, new WPARAM(7L).longValue());
     }
 
     @Test
     void testToStringContainsValue() {
-        assertTrue(new WPARAM(777).toString().contains("777"));
+        assertTrue(new WPARAM(777L).toString().contains("777"));
     }
 }

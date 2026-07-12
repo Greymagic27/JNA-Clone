@@ -28,7 +28,7 @@ public abstract class Structure {
     private final Map<String, Field> fields = new LinkedHashMap<>();
 
     protected Structure() {
-        this(Arena.ofAuto());
+        this(Arena.ofShared());
     }
 
     public Structure(@NonNull Arena arena) {
@@ -151,13 +151,12 @@ public abstract class Structure {
     }
 
     public void write() {
-        Arena callArena = arena != null ? arena : Arena.ofAuto();
         for (Map.Entry<String, Field> e : fields.entrySet()) {
             try {
                 Field f = e.getValue();
                 Object javaValue = f.get(this);
                 if (javaValue == null) javaValue = createDefaultValue(f.getType());
-                Object nativeValue = TypeMapper.toNative(javaValue, f.getType(), callArena);
+                Object nativeValue = TypeMapper.toNative(javaValue, f.getType(), arena);
                 handles.get(e.getKey()).set(segment, 0, nativeValue);
             } catch (IllegalAccessException ex) {
                 throw new RuntimeException(ex);
@@ -169,6 +168,7 @@ public abstract class Structure {
         for (Map.Entry<String, Field> e : fields.entrySet()) {
             try {
                 Field f = e.getValue();
+                if (Callback.class.isAssignableFrom(f.getType()) || f.getType() == String.class || Structure.class.isAssignableFrom(f.getType())) continue;
                 Object raw = handles.get(e.getKey()).get(segment, 0);
                 f.set(this, TypeMapper.fromNative(raw, f.getType()));
             } catch (IllegalAccessException ex) {

@@ -584,9 +584,9 @@ class TypeMapperTest {
 
     @Test
     void testFromNative_WPARAM() {
-        Object result = TypeMapper.fromNative(9999, WPARAM.class);
+        Object result = TypeMapper.fromNative(9999L, WPARAM.class);
         assertInstanceOf(WPARAM.class, result);
-        assertEquals(9999, ((WPARAM) result).intValue());
+        assertEquals(9999L, ((WPARAM) result).longValue());
     }
 
     @Test

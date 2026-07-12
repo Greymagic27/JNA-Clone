@@ -1,8 +1,11 @@
 package io.github.greymagic27.jna_clone;
 
-
-import io.github.greymagic27.jna_clone.WinDef.*;
-import io.github.greymagic27.jna_clone.platform.*;
+import io.github.greymagic27.jna_clone.WinDef.HINSTANCE;
+import io.github.greymagic27.jna_clone.WinDef.HWND;
+import io.github.greymagic27.jna_clone.WinDef.LRESULT;
+import io.github.greymagic27.jna_clone.platform.Kernel32;
+import io.github.greymagic27.jna_clone.platform.User32;
+import io.github.greymagic27.jna_clone.platform.WinUser;
 
 @SuppressWarnings("unused")
 public class EasyMethods {

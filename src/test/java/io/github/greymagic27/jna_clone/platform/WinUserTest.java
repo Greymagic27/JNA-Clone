@@ -130,7 +130,7 @@ class WinUserTest {
         WinUser.WndProc wndProc = (hWnd, uMsg, wParam, lParam) -> {
             assertEquals(hwnd.segment.address(), hWnd.segment.address());
             Assertions.assertEquals(msg, uMsg);
-            Assertions.assertEquals(wparam.intValue(), wParam.intValue());
+            Assertions.assertEquals(wparam.longValue(), wParam.longValue());
             Assertions.assertEquals(lparam.longValue(), lParam.longValue());
             return new LRESULT(0);
         };
