@@ -1,17 +1,14 @@
 name: Build
-
 on:
   push:
     branches: [ "*" ]
   pull_request:
     branches: [ "*" ]
-
 jobs:
   build:
     runs-on: windows-latest
     permissions:
       contents: read
-
     steps:
       - uses: actions/checkout@v7.0.0
       - name: Set up JDK 26
@@ -19,11 +16,9 @@ jobs:
         with:
           java-version: '26'
           distribution: 'oracle'
-
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6.2.0
         with:
           gradle-version: current
-
       - name: Build with Gradle
         run: gradle build
