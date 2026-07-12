@@ -118,7 +118,7 @@ class WinUserTest {
     @Test
     void testMsg() {
         WinUser.MSG msg = new WinUser.MSG();
-        assertEquals(48, msg.size());
+        assertEquals(56, msg.size());
     }
 
     @Test

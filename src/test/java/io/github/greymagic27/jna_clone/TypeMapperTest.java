@@ -38,10 +38,10 @@ class TypeMapperTest {
 
     @Test
     void testLayoutMappings() {
-        for (Class<?> type : List.of(int.class, Integer.class, WPARAM.class, LONG.class)) {
+        for (Class<?> type : List.of(int.class, Integer.class, LONG.class)) {
             assertEquals(JAVA_INT, TypeMapper.layoutMappings(type));
         }
-        for (Class<?> type : List.of(long.class, Long.class, LRESULT.class, LPARAM.class)) {
+        for (Class<?> type : List.of(long.class, Long.class, LRESULT.class, LPARAM.class, WPARAM.class)) {
             assertEquals(ValueLayout.JAVA_LONG, TypeMapper.layoutMappings(type));
         }
         for (Class<?> type : List.of(short.class, Short.class, WORD.class, ATOM.class)) {
@@ -314,9 +314,9 @@ class TypeMapperTest {
     @Test
     void testToNative_WPARAM() {
         try (Arena arena = Arena.ofConfined()) {
-            WPARAM value = new WPARAM(9999);
+            WPARAM value = new WPARAM(9999L);
             Object result = TypeMapper.toNative(value, WPARAM.class, arena);
-            assertEquals(9999, result);
+            assertEquals(9999L, result);
         }
     }
 
