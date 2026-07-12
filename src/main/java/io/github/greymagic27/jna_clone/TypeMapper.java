@@ -98,7 +98,7 @@ public final class TypeMapper {
                 short value = (short) raw;
                 return returnType.getConstructor(short.class).newInstance(value);
             } catch (ReflectiveOperationException e) {
-                throw new RuntimeException("WORD sublass " + returnType + " needs a (short) constructor", e);
+                throw new RuntimeException("WORD subclass " + returnType + " needs a (short) constructor", e);
             }
         }
         if (returnType == Boolean.class || returnType == boolean.class) {
