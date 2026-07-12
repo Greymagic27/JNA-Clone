@@ -168,7 +168,7 @@ public abstract class Structure {
         for (Map.Entry<String, Field> e : fields.entrySet()) {
             try {
                 Field f = e.getValue();
-                if (Callback.class.isAssignableFrom(f.getType()) || f.getType() == String.class || Structure.class.isAssignableFrom(f.getType())) continue;
+                if (!TypeMapper.isReadable(f.getType())) continue;
                 Object raw = handles.get(e.getKey()).get(segment, 0);
                 f.set(this, TypeMapper.fromNative(raw, f.getType()));
             } catch (IllegalAccessException ex) {

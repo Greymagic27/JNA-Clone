@@ -31,6 +31,12 @@ public final class TypeMapper {
         throw new IllegalArgumentException("No native layout mapping for: " + javaType);
     }
 
+    static boolean isReadable(Class<?> type) {
+        if (Callback.class.isAssignableFrom(type)) return false;
+        if (type == String.class) return false;
+        return !Structure.class.isAssignableFrom(type);
+    }
+
     static Object toNative(Object value, Class<?> javaType, Arena callArena) {
         if (value == null) {
             boolean addressType = javaType == String.class || Pointer.class.isAssignableFrom(javaType) || Structure.class.isAssignableFrom(javaType) || Callback.class.isAssignableFrom(javaType);
