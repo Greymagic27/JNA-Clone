@@ -1,4 +1,4 @@
-package io.github.greymagic27.jna_clone;
+package io.github.greymagic27.jna_clone.methods;
 
 import io.github.greymagic27.jna_clone.WinDef.HINSTANCE;
 import io.github.greymagic27.jna_clone.WinDef.HWND;
@@ -8,9 +8,7 @@ import io.github.greymagic27.jna_clone.platform.User32;
 import io.github.greymagic27.jna_clone.platform.WinUser;
 import java.util.Objects;
 
-@SuppressWarnings("unused")
-public class EasyMethods {
-
+public class Window {
     private static HWND currentWindow;
     private static WindowPosition windowPosition;
     private static int currentWidth;
@@ -118,12 +116,5 @@ public class EasyMethods {
      */
     public static HWND getCurrentWindow() {
         return currentWindow;
-    }
-
-    /**
-     * Specifies where you would like the window to appear on the screen
-     */
-    public enum WindowPosition {
-        CENTER, TOP, BOTTOM, LEFT, RIGHT, TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
     }
 }
