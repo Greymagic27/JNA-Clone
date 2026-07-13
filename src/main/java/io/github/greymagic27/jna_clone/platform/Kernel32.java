@@ -29,6 +29,13 @@ public interface Kernel32 extends Library {
     HMODULE GetModuleHandleW(String lpModuleName);
 
     /**
+     * Loads the specified module into the address space of the calling process. The specified module may cause other modules to be loaded
+     * @param lpLibFileName The name of the module. This can be a module name or an executable
+     * @return If the function succeeds, the return is a {@link HANDLE} to the module. If the function fails, the return value is NULL
+     */
+    HMODULE LoadLibraryW(String lpLibFileName);
+
+    /**
      * Retrieves the process identifier of the calling process
      *
      * @return Process identifier of the calling process

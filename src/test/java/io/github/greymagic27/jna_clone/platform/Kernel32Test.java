@@ -48,7 +48,17 @@ class Kernel32Test {
     void testGetLastError() {
         HMODULE hmodule = kernel32.GetModuleHandleW("NonExistent.dll");
         assertTrue(hmodule.isNull());
-        int lastError = kernel32.GetLastError();
-        assertEquals(126, lastError);
+        assertEquals(126, kernel32.GetLastError());
+    }
+
+    @Test
+    void testLoadLibrary() {
+        HMODULE hmodule = kernel32.LoadLibraryW("kernel32.dll");
+        HMODULE hmodule1 = kernel32.LoadLibraryW("NonExistent");
+        assertNotNull(hmodule);
+        assertNotNull(hmodule1);
+        assertFalse(hmodule.isNull());
+        assertTrue(hmodule1.isNull());
+        assertEquals(126, kernel32.GetLastError());
     }
 }
