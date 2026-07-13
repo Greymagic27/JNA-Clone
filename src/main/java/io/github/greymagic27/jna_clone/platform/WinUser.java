@@ -117,6 +117,7 @@ public interface WinUser {
     interface Wndproc extends Callback {
         /**
          * Creates a standard window with default {@link #WM_DESTROY} handling
+         *
          * @return Returns a standard window procedure callback
          */
         static @NonNull Wndproc defaultWndProc() {

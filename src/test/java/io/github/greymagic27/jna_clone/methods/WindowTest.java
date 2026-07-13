@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -26,6 +27,7 @@ class WindowTest {
         HWND hwnd = Window.getCurrentWindow();
         if (hwnd != null) User32.INSTANCE.DestroyWindow(hwnd);
         if (windowThread != null && windowThread.isAlive()) windowThread.interrupt();
+        Window.reset();
     }
 
     private void createTestWindow() {
@@ -100,5 +102,12 @@ class WindowTest {
         long timeout = System.currentTimeMillis() + 2000;
         while (!called.get() && System.currentTimeMillis() < timeout) Thread.onSpinWait();
         assertTrue(called.get(), "Custom Wndproc was not called");
+    }
+
+    @Test
+    void testGetCurrentWindow() {
+        assertNull(Window.getCurrentWindow());
+        createTestWindow();
+        assertNotNull(Window.getCurrentWindow());
     }
 }

@@ -7,6 +7,9 @@ import io.github.greymagic27.jna_clone.platform.User32;
 import io.github.greymagic27.jna_clone.platform.WinUser;
 import java.util.Objects;
 
+/**
+ * Helpers to create a window without rewriting lines of code
+ */
 public class Window {
     private static HWND currentWindow;
     private static WindowPosition windowPosition;
@@ -105,9 +108,18 @@ public class Window {
     }
 
     /**
-     * Returns the current window HWND
+     * Returns the current window {@link HWND}
      */
     public static HWND getCurrentWindow() {
         return currentWindow;
+    }
+
+    /**
+     * Resets window attributes to 0 or null
+     */
+    public static void reset() {
+        currentWindow = null;
+        currentHeight = 0;
+        currentWidth = 0;
     }
 }
