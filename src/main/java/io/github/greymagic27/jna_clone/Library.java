@@ -45,9 +45,11 @@ public interface Library {
 
     class LastError {
         private static final ThreadLocal<Integer> LAST_ERROR = ThreadLocal.withInitial(() -> 0);
+
         private static void set(int error) {
             LAST_ERROR.set(error);
         }
+
         private static int get() {
             return LAST_ERROR.get();
         }
