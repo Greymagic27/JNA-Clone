@@ -16,7 +16,7 @@ public class Window {
     /**
      * Creates a basic window
      *
-     * @param wndproc Custom wndproc. If null, this defaults to the wndProc in {@link #createWindow(WinUser.Wndproc, String, int, int)}
+     * @param wndproc Custom wndproc. If null, this defaults to {@link WinUser.Wndproc#defaultWndProc()}
      * @param title   Title of the window
      * @param width   Width of the window
      * @param height  Height of the window
@@ -44,7 +44,7 @@ public class Window {
     public static void start() {
         setWindowPosition(Objects.requireNonNullElse(windowPosition, WindowPosition.CENTER));
         WinUser.MSG msg = new WinUser.MSG();
-        while (User32.INSTANCE.GetMessageW(msg, null, 0, 0) != 0) {
+        while (User32.INSTANCE.GetMessageW(msg, null, 0, 0).booleanValue()) {
             User32.INSTANCE.TranslateMessage(msg);
             User32.INSTANCE.DispatchMessageW(msg);
         }

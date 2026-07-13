@@ -111,7 +111,7 @@ public interface User32 extends Library {
      * @param wMsgFilterMax Integer value of the highest message value to be retrieved. Use WM_KEYLAST to specify last keyboard message or WM_MOUSELAST to specify last mouse message
      * @return If the function retrieves a message other than WM_QUIT, the return value is nonzero. If the function retrieves WM_QUT, the return value is zero. If there is an error, the return value is -1
      */
-    int GetMessageW(WinUser.MSG lpMsg, HWND hWnd, int wMsgFilterMin, int wMsgFilterMax);
+    BOOL GetMessageW(WinUser.MSG lpMsg, HWND hWnd, int wMsgFilterMin, int wMsgFilterMax);
 
     /**
      * Retrieves the specified system metric or system configuration setting

@@ -15,25 +15,24 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static io.github.greymagic27.jna_clone.platform.WinUser.WS_OVERLAPPED;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class User32Test {
     private static final User32 user32 = User32.INSTANCE;
-    private HWND hwnd;
+    private HWND window;
     private WinUser.MSG msg;
 
     @BeforeEach
     void setUp() {
-        hwnd = user32.CreateWindowExW(0, "STATIC", null, WS_OVERLAPPED, 100, 100, 500, 400, null, null, null, null);
+        window = user32.CreateWindowExW(0, "STATIC", null, WinUser.WS_OVERLAPPED, 100, 100, 500, 400, null, null, null, null);
         msg = new WinUser.MSG();
     }
 
     @AfterEach
     void tearDown() {
-        user32.DestroyWindow(hwnd);
+        user32.DestroyWindow(window);
     }
 
     @Test
@@ -50,32 +49,32 @@ class User32Test {
 
     @Test
     void testShowWindow() {
-        BOOL result = user32.ShowWindow(hwnd, WinUser.SW_HIDE);
+        BOOL result = user32.ShowWindow(window, WinUser.SW_HIDE);
         assertNotNull(result);
     }
 
     @Test
     void testSetWindowPos() {
-        BOOL result = user32.SetWindowPos(hwnd, null, 200, 300, 400, 300, WinUser.SWP_NOZORDER);
+        BOOL result = user32.SetWindowPos(window, null, 200, 300, 400, 300, WinUser.SWP_NOZORDER);
         assertTrue(result.booleanValue());
     }
 
     @Test
     void testUpdateWindow() {
-        BOOL result = user32.UpdateWindow(hwnd);
+        BOOL result = user32.UpdateWindow(window);
         assertTrue(result.booleanValue());
     }
 
     @Test
     void testDestroyWindow() {
-        HWND hwnd1 = user32.CreateWindowExW(0, "STATIC", "Temp", WS_OVERLAPPED, 0, 0, 10, 10, null, null, null, null);
+        HWND hwnd1 = user32.CreateWindowExW(0, "STATIC", "Temp", WinUser.WS_OVERLAPPED, 0, 0, 10, 10, null, null, null, null);
         BOOL result = user32.DestroyWindow(hwnd1);
         assertTrue(result.booleanValue());
     }
 
     @Test
     void testTranslateMessage() {
-        msg.hwnd = hwnd;
+        msg.hwnd = window;
         msg.message = 0x0;
         msg.wParam = new WPARAM(0x41);
         msg.lParam = new LPARAM(0);
@@ -85,7 +84,7 @@ class User32Test {
 
     @Test
     void testDispatchMessage() {
-        msg.hwnd = hwnd;
+        msg.hwnd = window;
         msg.message = 0x1;
         msg.wParam = new WPARAM(0);
         msg.lParam = new LPARAM(0);
@@ -111,7 +110,7 @@ class User32Test {
     @Test
     void testGetWindowRect() {
         WinDef.RECT rect = new WinDef.RECT();
-        BOOL result = user32.GetWindowRect(hwnd, rect);
+        BOOL result = user32.GetWindowRect(window, rect);
         assertTrue(result.booleanValue());
         assertTrue(rect.right.intValue() > rect.left.intValue());
         assertTrue(rect.bottom.intValue() > rect.top.intValue());
@@ -129,14 +128,14 @@ class User32Test {
     void testDefWindowProc() {
         WPARAM wparam = new WPARAM(0);
         LPARAM lparam = new LPARAM(0);
-        LRESULT result = user32.DefWindowProcW(hwnd, 0x000F, wparam, lparam);
+        LRESULT result = user32.DefWindowProcW(window, 0x000F, wparam, lparam);
         assertNotNull(result);
     }
 
     @Test
     void testCreateWindowEx() {
-        assertNotNull(hwnd);
-        assertNotEquals(0, hwnd.segment.address());
+        assertNotNull(window);
+        assertNotEquals(0, window.segment.address());
     }
 
     @Test
@@ -145,12 +144,50 @@ class User32Test {
         AtomicBoolean quit = new AtomicBoolean(false);
         Thread t = new Thread(() -> {
             user32.PostQuitMessage(0);
-            int result = user32.GetMessageW(msg, null, 0, 0);
-            if (result == 0) quit.set(true);
+            BOOL result = user32.GetMessageW(msg, null, 0, 0);
+            if (!result.booleanValue()) quit.set(true);
             latch.countDown();
         });
         t.start();
         assertTrue(latch.await(2, TimeUnit.SECONDS));
         assertTrue(quit.get());
+    }
+
+    @Test
+    void testPostMessage() throws InterruptedException {
+        CountDownLatch ready = new CountDownLatch(1);
+        AtomicBoolean received = new AtomicBoolean(false);
+        int testMessage = WinUser.WM_COMMAND;
+        Thread window = new Thread(() -> {
+            WinUser.WNDCLASSEXW wc = new WinUser.WNDCLASSEXW();
+            wc.cbSize = wc.size();
+            wc.lpfnWndProc = (hWnd, uMsg, wParam, lParam) -> {
+                if (uMsg == testMessage) {
+                    received.set(true);
+                    return new LRESULT(0);
+                }
+                return user32.DefWindowProcW(hWnd, uMsg, wParam, lParam);
+            };
+            wc.hInstance = new HINSTANCE(MemorySegment.NULL);
+            wc.lpszClassName = "PostMessageTestClass";
+            user32.RegisterClassExW(wc);
+            this.window = user32.CreateWindowExW(0, "PostMessageTestClass", "PostMessageTest", WinUser.WS_OVERLAPPED, 0, 0, 100, 100, null, null, null, null);
+            ready.countDown();
+            WinUser.MSG msg = new WinUser.MSG();
+            while (user32.GetMessageW(msg, null, 0, 0).booleanValue()) {
+                user32.TranslateMessage(msg);
+                user32.DispatchMessageW(msg);
+            }
+        });
+        window.start();
+        assertTrue(ready.await(2, TimeUnit.SECONDS));
+        BOOL result = user32.PostMessageW(this.window, testMessage, new WPARAM(0), new LPARAM(0));
+        assertTrue(result.booleanValue());
+        long timeout = System.currentTimeMillis() + 2000;
+        while (!received.get() && System.currentTimeMillis() < timeout) {
+            Thread.onSpinWait();
+        }
+        assertTrue(received.get(), "Message was not received");
+        user32.PostQuitMessage(0);
     }
 }
