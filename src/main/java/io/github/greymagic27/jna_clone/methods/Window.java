@@ -19,7 +19,7 @@ public class Window {
     /**
      * Creates a basic window
      *
-     * @param wndproc Custom wndproc. If null, this defaults to {@link WinUser.Wndproc#defaultWndProc()}
+     * @param wndproc Custom wndproc. If you do not want to use a custom wndproc, use {@link WinUser.Wndproc#defaultWndProc()}
      * @param title   Title of the window
      * @param width   Width of the window
      * @param height  Height of the window
