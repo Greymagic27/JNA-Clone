@@ -42,4 +42,10 @@ public interface Kernel32 extends Library {
      * @return Process identifier. If the function fails, this will be zero
      */
     int GetProcessId(HANDLE Process);
+
+    /**
+     * Retrieves the calling thread's last-error code value. The last-error code is maintained on a per-thread basis. Multiple threads do not overwrite each other's last-error code
+     * @return Return value is the calling thread's last error code
+     */
+    int GetLastError();
 }

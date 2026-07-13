@@ -6,6 +6,7 @@ import java.lang.foreign.Linker;
 import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.SymbolLookup;
+import java.lang.foreign.ValueLayout;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
 import java.util.Locale;
@@ -18,10 +19,13 @@ public final class NativeLibrary {
     private final Linker linker = Linker.nativeLinker();
     private final SymbolLookup lookup;
     private final Map<Method, MethodHandle> handleCache = new ConcurrentHashMap<>();
+    private final MethodHandle getLastErrorHandle;
 
     NativeLibrary(String libraryName) {
         Arena libraryArena = Arena.ofShared();
         this.lookup = SymbolLookup.libraryLookup(mapLibraryName(libraryName), libraryArena);
+        MemorySegment address = lookup.find("GetLastError").orElseThrow(() -> new UnsatisfiedLinkError("GetLastError not found"));
+        this.getLastErrorHandle = linker.downcallHandle(address, FunctionDescriptor.of(ValueLayout.JAVA_INT));
     }
 
     MethodHandle handleFor(Method method) {
@@ -44,5 +48,13 @@ public final class NativeLibrary {
     private @NonNull String mapLibraryName(@NonNull String libraryName) {
         String lower = libraryName.toLowerCase(Locale.getDefault());
         return lower.endsWith(".dll") ? lower : lower + ".dll";
+    }
+
+    int getLastError() {
+        try {
+            return (int) getLastErrorHandle.invokeExact();
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 }

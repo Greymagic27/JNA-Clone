@@ -43,4 +43,12 @@ class Kernel32Test {
         assertNotNull(hmodule);
         assertFalse(hmodule.isNull(), "handle for current process should not be null");
     }
+
+    @Test
+    void testGetLastError() {
+        HMODULE hmodule = kernel32.GetModuleHandleW("NonExistent.dll");
+        assertTrue(hmodule.isNull());
+        int lastError = kernel32.GetLastError();
+        assertEquals(126, lastError);
+    }
 }
