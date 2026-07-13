@@ -101,7 +101,7 @@ public interface WinUser {
     /**
      * A callback function which is defined in the application
      */
-    interface WndProc extends Callback {
+    interface Wndproc extends Callback {
         /**
          * A callback function that processes messages sent to a window
          *
@@ -131,7 +131,7 @@ public interface WinUser {
         /**
          * A pointer to the window procedure
          */
-        public WndProc lpfnWndProc;
+        public Wndproc lpfnWndProc;
         /**
          * The number of extra bytes to allocate following the window-class structure. This initialises to 0
          */

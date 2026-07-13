@@ -88,14 +88,14 @@ class WinUserTest {
         int msg = WM_DESTROY;
         WPARAM wparam = new WPARAM(1);
         LPARAM lparam = new LPARAM(1);
-        WinUser.WndProc wndProc = (hWnd, uMsg, wParam, lParam) -> {
+        WinUser.Wndproc wndproc = (hWnd, uMsg, wParam, lParam) -> {
             assertEquals(hwnd.segment.address(), hWnd.segment.address());
             Assertions.assertEquals(msg, uMsg);
             Assertions.assertEquals(wparam.longValue(), wParam.longValue());
             Assertions.assertEquals(lparam.longValue(), lParam.longValue());
             return new LRESULT(0);
         };
-        LRESULT result = wndProc.callback(hwnd, msg, wparam, lparam);
+        LRESULT result = wndproc.callback(hwnd, msg, wparam, lparam);
         assertNotNull(result);
         assertEquals(0, result.longValue());
     }
