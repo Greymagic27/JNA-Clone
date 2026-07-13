@@ -120,7 +120,7 @@ public abstract class Structure {
         unexpected.removeAll(declaredNames);
         if (!missing.isEmpty() || !unexpected.isEmpty()) {
             StringBuilder sb = new StringBuilder("@FieldOrder on ").append(getClass().getSimpleName()).append(" doesn't match its declared fields");
-            if (!missing.isEmpty()) sb.append(System.lineSeparator()).append(System.lineSeparator()).append("Missing from @FieldOrder").append(missing);
+            if (!missing.isEmpty()) sb.append(System.lineSeparator()).append("Missing from @FieldOrder ").append(missing);
             if (!unexpected.isEmpty()) sb.append(System.lineSeparator()).append("Not a declared field: ").append(unexpected);
             throw new IllegalStateException(sb.toString());
         }
@@ -128,18 +128,28 @@ public abstract class Structure {
 
     private @NonNull List<Field> resolveFieldOrder() {
         FieldOrder order = getClass().getAnnotation(FieldOrder.class);
-        if (order == null) throw new IllegalStateException(getClass().getSimpleName() + " must be annotated with @FieldOrder");
-        List<Field> resolved = new ArrayList<>();
-        List<String> missing = new ArrayList<>();
-        for (String name : order.value()) {
-            try {
-                resolved.add(getClass().getDeclaredField(name));
-            } catch (NoSuchFieldException e) {
-                missing.add(name);
+        if (order != null) {
+            List<Field> resolved = new ArrayList<>();
+            List<String> missing = new ArrayList<>();
+            for (String name : order.value()) {
+                try {
+                    resolved.add(getClass().getDeclaredField(name));
+                } catch (NoSuchFieldException e) {
+                    missing.add(name);
+                }
             }
+            if (!missing.isEmpty()) throw new IllegalStateException("@FieldOrder on " + getClass().getSimpleName() + " names " + missing + ", but no such field(s) exist");
+            return resolved;
         }
-        if (!missing.isEmpty()) throw new RuntimeException("@FieldOrder on " + getClass().getSimpleName() + " names " + missing + ", but no such field(s) exist");
-        return resolved;
+        if (getClass().isAnnotationPresent(AutoFieldOrder.class)) {
+            List<Field> fields = new ArrayList<>();
+            for (Field field : getClass().getDeclaredFields()) {
+                if (!Modifier.isStatic(field.getModifiers())) fields.add(field);
+            }
+            if (fields.isEmpty()) throw new IllegalStateException(getClass().getSimpleName() + " declares no fields");
+            return fields;
+        }
+        throw new IllegalStateException(getClass().getSimpleName() + " must be annotated with @FieldOrder or @AutoFieldOrder");
     }
 
     public Pointer pointer() {
@@ -199,9 +209,20 @@ public abstract class Structure {
         this.segment = segment;
     }
 
+    /**
+     * Structure field order is manually set using field names
+     */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
     public @interface FieldOrder {
         String[] value();
+    }
+
+    /**
+     * Structure field order is automatically set using the declared field order
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
+    public @interface AutoFieldOrder {
     }
 }

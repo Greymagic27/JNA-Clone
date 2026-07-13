@@ -11,7 +11,7 @@ public interface WinDef {
     /**
      * Defines the x and y coordinates of a point
      */
-    @Structure.FieldOrder({"x", "y"})
+    @Structure.AutoFieldOrder
     class POINT extends Structure {
         /**
          * Specifies the x-coordinate of the point
@@ -26,7 +26,7 @@ public interface WinDef {
     /**
      * Defines a rectangle by the coordinates of its upper-left and lower-right corners
      */
-    @Structure.FieldOrder({"left", "top", "right", "bottom"})
+    @Structure.AutoFieldOrder
     class RECT extends Structure {
         /**
          * Specifies the x-coordinate of the upper-left corner of the rectangle

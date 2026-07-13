@@ -198,6 +198,55 @@ class StructureTest {
         assertTrue(e2.getMessage().contains("Y"));
     }
 
+    @Test
+    void testAutoFieldOrder() {
+        @Structure.AutoFieldOrder
+                class AutoOrder extends Structure {
+            private int first;
+            private long second;
+            private short third;
+        }
+        AutoOrder st = new AutoOrder();
+        st.first = 100;
+        st.second = 350L;
+        st.third = 50;
+        MemorySegment segment = st.pointer().segment;
+        assertEquals(100, segment.get(ValueLayout.JAVA_INT, 0));
+        assertEquals(350L, segment.get(ValueLayout.JAVA_LONG, 8));
+        assertEquals((short) 50, segment.get(ValueLayout.JAVA_SHORT, 16));
+        st.first = 0;
+        st.second = 0;
+        st.third = 0;
+        st.read();
+        assertEquals(100, st.first);
+        assertEquals(350L, st.second);
+        assertEquals((short) 50, st.third);
+    }
+
+    @Test
+    void testFieldOrder() {
+        @Structure.FieldOrder({"third", "first", "second"})
+        class ExplicitOrder extends Structure {
+            private int first;
+            private long second;
+            private short third;
+        }
+        ExplicitOrder st = new ExplicitOrder();
+        st.first = 100;
+        st.second = 350L;
+        st.third = 50;
+        MemorySegment seg = st.pointer().segment;
+        assertEquals((short) 50, seg.get(ValueLayout.JAVA_SHORT, 0));
+        assertEquals(100, seg.get(ValueLayout.JAVA_INT, 4));
+        assertEquals(350L, seg.get(ValueLayout.JAVA_LONG, 8));
+        st.first = 0;
+        st.second = 0;
+        st.third = 0;
+        st.read();
+        assertEquals(100, st.first);
+        assertEquals(350L, st.second);
+        assertEquals((short) 50, st.third);
+    }
 
     @Structure.FieldOrder({"x", "y"})
     private static class Point extends Structure {

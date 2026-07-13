@@ -118,7 +118,7 @@ public interface WinUser {
      * Contains window class information
      */
     @SuppressWarnings("unused")
-    @Structure.FieldOrder({"cbSize", "style", "lpfnWndProc", "cbClsExtra", "cbWndExtra", "hInstance", "hIcon", "hCursor", "hbrBackground", "lpszMenuName", "lpszClassName", "hIconSm"})
+    @Structure.AutoFieldOrder
     class WNDCLASSEXW extends Structure {
         /**
          * The size, in bytes, of this structure
@@ -174,7 +174,7 @@ public interface WinUser {
      * Contains message information from a thread's message queue
      */
     @SuppressWarnings("unused")
-    @Structure.FieldOrder({"hwnd", "message", "wParam", "lParam", "time", "pt"})
+    @Structure.AutoFieldOrder
     class MSG extends Structure {
         /**
          * A {@link io.github.greymagic27.jna_clone.WinNT.HANDLE} to the window whose window procedure receives the message. This is NULL when the message is a thread message
