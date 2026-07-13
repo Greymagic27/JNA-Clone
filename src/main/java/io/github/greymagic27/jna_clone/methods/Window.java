@@ -25,7 +25,7 @@ public class Window {
         currentWidth = width;
         currentHeight = height;
         HINSTANCE hInstance = Kernel32.INSTANCE.GetModuleHandleW(null);
-        WinUser.WndProc wndProc = (hWnd, uMsg, wParam, lParam) -> {
+        WinUser.Wndproc wndproc = (hWnd, uMsg, wParam, lParam) -> {
             LRESULT result = User32.INSTANCE.DefWindowProcW(hWnd, uMsg, wParam, lParam);
             if (uMsg == WinUser.WM_DESTROY) {
                 currentWindow = null;
@@ -36,7 +36,7 @@ public class Window {
         };
         WinUser.WNDCLASSEXW wc = new WinUser.WNDCLASSEXW();
         wc.cbSize = wc.size();
-        wc.lpfnWndProc = wndProc;
+        wc.lpfnWndProc = wndproc;
         wc.hInstance = hInstance;
         wc.lpszClassName = "WindowClass";
         User32.INSTANCE.RegisterClassExW(wc);
