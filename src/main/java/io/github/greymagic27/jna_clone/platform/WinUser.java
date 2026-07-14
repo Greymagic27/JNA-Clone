@@ -111,6 +111,10 @@ public interface WinUser {
      */
     int SWP_NOZORDER = 0x0004;
 
+    int ES_MULTILINE = 0x0004;
+    int ES_AUTOVSCROLL = 0x0040;
+    int ES_WANTRETURN = 0x1000;
+
     /**
      * A callback function which is defined in the application
      */

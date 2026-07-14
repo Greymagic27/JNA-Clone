@@ -7,6 +7,9 @@ import io.github.greymagic27.jna_clone.WinDef.WPARAM;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static io.github.greymagic27.jna_clone.platform.WinUser.ES_AUTOVSCROLL;
+import static io.github.greymagic27.jna_clone.platform.WinUser.ES_MULTILINE;
+import static io.github.greymagic27.jna_clone.platform.WinUser.ES_WANTRETURN;
 import static io.github.greymagic27.jna_clone.platform.WinUser.SM_CXSCREEN;
 import static io.github.greymagic27.jna_clone.platform.WinUser.SM_CYSCREEN;
 import static io.github.greymagic27.jna_clone.platform.WinUser.SWP_NOZORDER;
@@ -69,6 +72,13 @@ class WinUserTest {
     void testSmValues() {
         assertEquals(0, SM_CXSCREEN);
         assertEquals(1, SM_CYSCREEN);
+    }
+
+    @Test
+    void testEsValues() {
+        assertEquals(0x0004, ES_MULTILINE);
+        assertEquals(0x0040, ES_AUTOVSCROLL);
+        assertEquals(0x1000, ES_WANTRETURN);
     }
 
     @Test
