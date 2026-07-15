@@ -7,7 +7,7 @@ welcomed. Name suggestions also welcome!
 
 # Usage
 
-Currently this is not published on any maven or gradle repository.
+Currently, this is not published on any maven or Gradle repository.
 
 To use this in your own projects, you will need to clone the repository and run the following command:
 `gradle publishToMavenLocal`
