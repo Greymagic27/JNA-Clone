@@ -3,7 +3,7 @@ plugins {
     id 'signing'
     id 'maven-publish'
     id 'net.ltgt.errorprone' version '5.1.0'
-    id("com.vanniktech.maven.publish") version "0.37.0"
+    id 'com.vanniktech.maven.publish' version '0.37.0'
 }
 
 group = 'io.github.greymagic27'
@@ -14,6 +14,7 @@ repositories {
 }
 
 mavenPublishing {
+    //noinspection GroovyImplicitNullArgumentCall
     publishToMavenCentral()
     signAllPublications()
 }
@@ -59,18 +60,8 @@ tasks.javadoc {
 tasks.withType(Javadoc).configureEach {
     options.addStringOption("Xdoclint:-missing", "-quiet")
 }
-tasks.named("build") {
-    dependsOn("publishToMavenLocal")
-}
-tasks.named("check") {
-    dependsOn("publishToMavenLocal")
-}
-tasks.named("test") {
-    dependsOn("publishToMavenLocal")
-}
 mavenPublishing {
     coordinates(group, "WinMethod", version)
-
     //noinspection GroovyAssignabilityCheck
     pom {
         name = "WinMerge"
@@ -80,8 +71,8 @@ mavenPublishing {
         licenses {
             license {
                 name = "The Apache License, Version 2.0"
-                url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                distribution = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution = "https://www.apache.org/licenses/LICENSE-2.0.txt"
             }
         }
         developers {
