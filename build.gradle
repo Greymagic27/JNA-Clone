@@ -20,6 +20,7 @@ mavenPublishing {
 }
 
 signing {
+    required = gradle.taskGraph.hasTask("publish")
     useGpgCmd()
 }
 
